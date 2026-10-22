@@ -11,6 +11,8 @@ No code, build, lint, or test tooling yet — only two input documents (all in P
 
 Python 3 is available but `openpyxl` is not installed; the xlsx has no `sharedStrings.xml` (inline strings), so it can also be parsed straight from the zip XML.
 
+Run `python3 -I analise_planilha.py > resultados-analise.md` to regenerate the computed results. The xlsx formulas have empty cached values (`<v></v>`), so every derived number (totals, margins, JCP, absenteeism) must be recomputed in code; `analise_planilha.py` has a zip/XML loader (`dados(i)` for sheet i) to reuse.
+
 ## Assignment requirements (from the enunciado)
 
 - Build an AI solution for the crisis scenario: **either** a multi-agent system (e.g. external-data collection, financial, operational/logistics, reviewer agents) **or** a single agent with human-in-the-loop manual approval. Goal: reverse the operating deficit, cut costs, maximize results.
