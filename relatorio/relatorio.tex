@@ -1,10 +1,14 @@
 \documentclass[12pt,a4paper,oneside,brazil]{abntex2}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage{lmodern,graphicx,booktabs,indentfirst}
+\usepackage{newtxtext,graphicx,booktabs,indentfirst}
 \usepackage[brazilian,hyperpageref]{backref}
 \usepackage[alf]{abntex2cite}
 \graphicspath{{../figuras/}}
+
+\newenvironment{palavras-chave}{%
+  \par\vspace{0.5em}\noindent\textbf{Palavras-chave:}%
+}{\par}
 
 \titulo{Plano de Reestruturação da Caxias Heavy Industries com Sistema Multiagentes baseado em LLMs}
 \autor{Iuri; João Guedes; Bruno Muniz; Davi; Diogo; Novak}
@@ -12,8 +16,6 @@
 \data{2026}
 \instituicao{Universidade Federal de Santa Maria}
 \preambulo{Trabalho final apresentado à disciplina de Inteligência Artificial Generativa, como requisito parcial para obtenção do grau de bacharel. Professor(a): avaliador da disciplina.}
-
-\citeprompt{...}
 
 \begin{document}
 \imprimircapa
@@ -34,21 +36,50 @@ Sistemas multiagentes. Large Language Models. Tool use. Reestruturação empresa
 \textual
 
 \chapter{Introdução}
-\section{Contextualização}
+\section{Empresa}
 
-A Caxias Heavy Industries é uma fabricante de ônibus com atuação concentrada em Santa Maria, atendendo principalmente prefeituras para o segmento urbano e empresas de turismo para o rodoviário. Produz carrocerias customizadas em cinco modelos: Urbano Standard 12m, Urbano Articulado 18m, Rodoviário Premium DD 14m, Micro-ônibus Executivo 9m e Urbano Elétrico 12m.
+A Caxias Heavy Industries é uma fabricante de ônibus com capital aberto na B3. Possui cinco modelos em seu portfólio: Urbano, Articulado, Rodoviário Premium DD, Micro-ônibus e Elétrico. A empresa tem como principal mercado Santa Maria, sendo seus clientes prefeituras, empresas de turismo e secretarias municipais. Opera 24 horas por dia, em três turnos de 8 horas.
 
-A crise é agravada pela crise na América do Sul e pela redução das vendas. Os pedidos recebidos são insuficientes para cobrir os compromissos financeiros. Há dificuldades para pagar os dividendos mensalmente, com atrasos e juros acumulados, e existe risco de bloqueio das contas pela B3. A empresa está negociando acordos para lidar com a situação, mas o proprietário abriu ações sem investir de forma adequada.
+\section{Dificuldades}
 
-A prioridade definida pelo cliente é regularizar o pagamento dos dividendos e reduzir o risco financeiro, em prazo máximo de 12 meses, com carta branca para as mudanças necessárias, observado o vínculo CLT dos empregados.
+A empresa está sofrendo com a crise na América do Sul, a queda das vendas e os investimentos inadequados após a abertura do capital. O pagamento de dividendos se destaca como problema central: a abertura de capital criou a obrigação de atender aos compromissos assumidos com os acionistas, os quais a empresa atualmente não está sendo capaz de cumprir.
+
+A empresa tem o compromisso de pagamento de dividendos de R\$ 33,3 milhões no período de novembro de 2025 a outubro de 2026, dos quais R\$ 22,5 milhões são exigíveis, ou seja, encontram-se em atraso ou estão sendo cobrados judicialmente, enquanto os R\$ 10,8 milhões restantes estão suspensos em razão da reestruturação. Esse cenário representa um risco real de bloqueio das contas da organização pela B3.
+
+Além das dificuldades financeiras, as operações apresentam diversos problemas, como retrabalho em aproximadamente 29\% dos ônibus, falhas frequentes nas máquinas que precisam ser solucionadas pelos próprios operadores, excesso de operadores e 27 pedidos pendentes.
+
+\section{Justificativa da intervenção}
+
+A necessidade de intervenção se dá pela urgência da situação, que, caso não seja resolvida, pode levar ao bloqueio de contas da empresa, ao acúmulo de multas e à perda da capacidade de entrega. Existe uma saída viável para a empresa, considerando que, ao regularizar os pagamentos de dividendos mensais dentro de 12 meses, a empresa poderá pagar os dividendos atrasados em 24 meses.
+
+Como a empresa tem problemas que envolvem várias áreas, foi adotada para a solução a arquitetura de multiagentes, com agentes especializados em cada campo.
 
 \section{Objetivo do trabalho}
 
-O objetivo deste trabalho é aplicar conceitos avançados de Arquitetura de Agentes Autônomos e LLMs, utilizando dados estruturados e informações externas, para reverter o déficit operacional, otimizar custos e maximizar os resultados do cenário. Optou-se por uma abordagem de Sistema Multiagentes, em razão da diversidade de domínios a avaliar, da necessidade de validação financeira das propostas e da existência de restrições checáveis automaticamente.
+Diante desse cenário, o objetivo deste trabalho é aplicar conceitos avançados de Arquitetura de Agentes Autônomos e LLMs, utilizando dados estruturados e informações externas, para reverter o déficit operacional, otimizar custos e maximizar os resultados do cenário. A diversidade de domínios a avaliar, a necessidade de validação financeira das propostas e a existência de restrições checáveis automaticamente reforçam a adequação da arquitetura multiagentes adotada.
 
-\section{Justificativa}
+\section{Organização da equipe}
 
-A justificativa da intervenção é dupla. Do ponto de vista operacional, a empresa tem capacidade teórica superior à demanda, mas enfrenta atrasos por fornecedores e paradas de maquinário de segunda mão, além de refugo elevado em três etapas. Do ponto de vista financeiro, depósitos de dividendos de 12 meses somam R\$ 33,3 milhões, dos quais R\$ 22,5 milhões exigíveis, enquanto o lucro bruto mensal das entregas é de aproximadamente R\$ 4,36 milhões, gerando cobertura de apenas 1,16 vez sobre a saída mensal de dividendos do plano.
+O trabalho foi conduzido por seis integrantes, com papéis definidos antes do início das atividades técnicas. O Consultor foi o único responsável pelo contato com o cliente, conduzindo a entrevista e apresentando as entregas. O Scrum Master organizou prazos, tarefas e impedimentos internos. Os demais integrantes atuaram como engenheiros de dados, desenvolvedores de agentes e analistas, responsáveis pela leitura da planilha, implementação das ferramentas e dos agentes, validação dos números e elaboração das análises. A Tabela~\ref{tab:equipe} resume a divisão.
+
+\begin{table}[htb]
+\caption{Divisão de papéis da equipe}
+\label{tab:equipe}
+\centering\small
+\begin{tabular}{@{}p{.18\textwidth}p{.72\textwidth}@{}}
+\toprule
+\textbf{Integrante} & \textbf{Papel e contribuição} \\
+\midrule
+Iuri & Consultor: contato único com o cliente, roteiro e condução das entrevistas, apresentação das entregas. \\
+João Guedes & Scrum Master: organização das atividades, prazos, integração do texto e revisão das referências. \\
+Bruno Muniz & Engenharia de dados: leitura da planilha, margens, carteira, capacidade e qualidade. \\
+Davi & Desenvolvimento dos agentes: arquitetura, ferramentas, implementação dos agentes e do Revisor. \\
+Diogo & Análise e validação: propostas, projeção de caixa e avaliação de impacto. \\
+Novak & Análise e validação: apoio às propostas, tabelas e conferência dos números. \\
+\bottomrule
+\end{tabular}
+\fonte{Elaboração dos autores (2026).}
+\end{table}
 
 \chapter{Embasamento teórico}
 \section{Inteligência Artificial Generativa e Large Language Models}
@@ -95,7 +126,7 @@ Essas respostas definiram as restrições modeladas no sistema: horizonte de 12 
 
 \section{Arquitetura do sistema de agentes}
 
-O sistema implementado é multiagentes, com Orquestrador, quatro especialistas, Coleta Externa e Revisor. O diagrama de fluxo está representado na Figura~\ref{fig:arquitetura}.
+O sistema implementado é multiagentes, com Orquestrador, quatro especialistas (Financeiro, Operações, Suprimentos e Mercado/Coleta Externa) e um Revisor. O diagrama de fluxo está representado na Figura~\ref{fig:arquitetura}.
 
 \begin{figure}[htb]
 \caption{Arquitetura do sistema multiagentes: orquestrador, especialistas, revisor e plano consolidado}
@@ -125,7 +156,7 @@ Revisor & Valida números, restrições e coerência; devolve com motivo se repr
 
 As ferramentas são funções Python puras sobre a planilha e, no caso do Coleta Externa, sobre a API do Banco Central. Toda conta é feita por função, nunca pelo LLM. O modo determinístico, que gerou todos os resultados deste relatório, usa agentes como funções Python que chamam as ferramentas e devolvem propostas com número. O modo LLM está implementado, com especialistas Claude/Gemini/local via tool use e pesquisa web para o Mercado, mas não foi executado no desenvolvimento por ausência de chave de API; portanto nenhum número do plano depende de saída de LLM.
 
-Dados externos consultados em 03/11/2026 via API SGS do Banco Central: Selic meta 13,75\% a.a.; dólar R\$ 5,4935; euro R\$ 6,15; IPCA do mês 0,82\%. A correção Selic dos dividendos atrasados somou R\$ 1.294.643 sobre principal de R\$ 22,5 milhões, com séries 4390 (Selic acumulada), 432 (Selic meta), 1 e 21619 (câmbio) e 433 (IPCA), com cópia em \texttt{dados\_externos.json}. Ressalta-se que a Selic foi adotada como índice de referência, pois juros e multa reais não foram informados pelo cliente.
+Dados externos consultados em 03/11/2026 via API SGS do Banco Central \cite{bcb2026sgs}: Selic meta 13,75\% a.a.; dólar R\$ 5,4935; euro R\$ 6,15; IPCA do mês 0,82\%. A correção Selic dos dividendos atrasados somou R\$ 1.294.643 sobre principal de R\$ 22,5 milhões, com séries 4390 (Selic acumulada), 432 (Selic meta), 1 e 21619 (câmbio) e 433 (IPCA), com cópia em \texttt{dados\_externos.json}. Ressalta-se que a Selic foi adotada como índice de referência, pois juros e multa reais não foram informados pelo cliente.
 
 As regras de validação aplicadas pelo Revisor são:
 
@@ -166,8 +197,8 @@ A margem por modelo, pelo preço praticado, varia de 25,5\% (elétrico) a 32,3\%
 \begin{table}[htb]
 \caption{Margem e lucro por modelo no preço praticado}
 \label{tab:margens}
-\centering\small
-\input{tabelas/margens}
+\centering\footnotesize
+\resizebox{\textwidth}{!}{\input{tabelas/margens}}
 \fonte{\texttt{margem\_por\_modelo}.}
 \end{table}
 
@@ -187,8 +218,8 @@ O tempo total de ciclo é 41,1 horas por veículo. A etapa mais lenta é Pintura
 \begin{table}[htb]
 \caption{Capacidade teórica por estação}
 \label{tab:capacidade}
-\centering\small
-\input{tabelas/capacidade}
+\centering\footnotesize
+\resizebox{\textwidth}{!}{\input{tabelas/capacidade}}
 \fonte{\texttt{capacidade\_linha}.}
 \end{table}
 
@@ -218,7 +249,7 @@ A folha mensal com encargos de 45\% é de R\$ 1.501.569 para 135 pessoas: 86 ope
 
 \subsection{Dividendos e passivos}
 
-Em 12 meses, os dividendos somam R\$ 33,3 milhões: R\$ 18,75 milhões acumulados em atraso (PN), R\$ 3,75 milhões com exigência judicial de minoritários e R\$ 10,8 milhões suspensos (ON). O total exigível é R\$ 22,5 milhões, ou 67,6\%. Isso equivale a 12,2\% da carteira do período e a 3,6 meses de lucro bruto médio. A média mensal é R\$ 2,775 milhões. A folha anual equivale a 9,5\% do valor já entregue.
+Em 12 meses, os dividendos somam R\$ 33,3 milhões: R\$ 18,75 milhões acumulados em atraso (PN), R\$ 3,75 milhões com exigência judicial de minoritários e R\$ 10,8 milhões suspensos (ON). O total exigível é R\$ 22,5 milhões, ou 67,6\% do total, equivalente a 3,6 meses de lucro bruto médio; o conjunto dos dividendos corresponde a 12,2\% da carteira do período. A média mensal é R\$ 2,775 milhões. A folha anual equivale a 9,5\% do valor já entregue.
 
 \begin{table}[htb]
 \caption{Dividendos por situação em 12 meses}
@@ -239,8 +270,8 @@ O plano consolidado avaliou 11 propostas, com parecer do Revisor. A Tabela~\ref{
 \begin{table}[htb]
 \caption{Propostas do sistema e parecer do Revisor}
 \label{tab:propostas}
-\centering\small
-\input{tabelas/propostas}
+\centering\footnotesize
+\resizebox{\textwidth}{!}{\input{tabelas/propostas}}
 \fonte{\texttt{plano-consolidado.md} gerado por \texttt{executar.py}.}
 \end{table}
 
@@ -276,7 +307,7 @@ O resultado consolidado, em proxy de caixa operacional definido como lucro bruto
 \caption{Projeção de 12 meses do proxy de caixa operacional}
 \label{tab:projecao}
 \centering\footnotesize
-\input{tabelas/projecao}
+\resizebox{\textwidth}{!}{\input{tabelas/projecao}}
 \fonte{\texttt{consolidar} em \texttt{agentes.py}.}
 \end{table}
 

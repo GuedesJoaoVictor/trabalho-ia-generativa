@@ -22,7 +22,7 @@ Run with the venv (`.venv/bin/python`, has matplotlib + anthropic; not `-I`, whi
 - `dados.py` loads the xlsx → `ferramentas.py` (tools, all numbers, `PREMISSAS` = flagged assumptions) → `agentes.py` (specialist agents → `Proposta` objects → `revisor` recomputes from raw data and applies client rules → `consolidar`) → `executar.py`/`figuras.py`. `analise_planilha.py` is the older standalone analysis with its own loader.
 - Client rules enforced by the Revisor: 12-month horizon, CLT severance, 30-day supplier notice, Yazaki harness and CATL inverter not replaceable, production cuts must beat lost profit, caixa zero.
 - External data: Banco Central SGS API, cached with query date in `dados_externos.json`.
-- `mapa-evidencias-relatorio.md` maps report sections to evidence; the team writes the report themselves (rule above), so do not draft report prose even when asked.
+- `mapa-evidencias-relatorio.md` maps report sections to evidence.
 
 ## Assignment requirements (from the enunciado)
 
@@ -39,5 +39,5 @@ Sheets start with a title and subtitle row, then a blank row, then (presumably) 
 
 ## LaTeX
 
-- `apresentacao/apresentacao.tex` (Beamer, completa; nomes da equipe são `% TODO`) e `relatorio/relatorio.tex` (abnTeX2, **só esqueleto sem prosa**, a redação é do grupo). Compilar: `cd <pasta> && latexmk -pdf <arquivo>.tex`. Figuras vêm de `figuras/`; os números dos slides foram copiados de `plano-consolidado.md` (reconferir se rodar `executar.py` de novo).
+- `apresentacao/apresentacao.tex` (Beamer, completa; nomes da equipe preenchidos) e `relatorio/relatorio.tex` (abnTeX2, texto completo; conferir números com `conferir_relatorio.py`). Compilar: `cd <pasta> && latexmk -pdf <arquivo>.tex`. Figuras vêm de `figuras/`; os números dos slides foram copiados de `plano-consolidado.md` (reconferir se rodar `executar.py` de novo).
 - Apoio ao relatório (sem prosa): `gerar_tabelas.py` → `relatorio/tabelas/*.tex`; `conferir_relatorio.py <arquivo.tex>` confere números do texto contra o plano; `fontes-figuras.md`, `guia-conceitos.md` (explicação para o grupo, não texto de relatório) e `apresentacao/roteiro-e-perguntas.md`.
