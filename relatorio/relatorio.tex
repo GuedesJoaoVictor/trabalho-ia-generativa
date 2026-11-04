@@ -1,5 +1,3 @@
-% Esqueleto do relatório (Fase III). Só estrutura: toda a redação é do grupo (regra 4.1 do enunciado).
-% Base: abnTeX2 (ABNT). CONFERIR contra o MDT UFSM vigente (margens, fonte, citações, referências).
 \documentclass[12pt,a4paper,oneside,brazil]{abntex2}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -8,22 +6,25 @@
 \usepackage[alf]{abntex2cite}
 \graphicspath{{../figuras/}}
 
-\titulo{% TODO: título
-}
-\autor{% TODO: autores
-}
+\titulo{Plano de Reestruturação da Caxias Heavy Industries com Sistema Multiagentes baseado em LLMs}
+\autor{Iuri; João Guedes; Bruno Muniz; Davi; Diogo; Novak}
 \local{Santa Maria}
 \data{2026}
 \instituicao{Universidade Federal de Santa Maria}
-\preambulo{% TODO: natureza do trabalho, disciplina e professor
-}
+\preambulo{Trabalho final apresentado à disciplina de Inteligência Artificial Generativa, como requisito parcial para obtenção do grau de bacharel. Professor(a): avaliador da disciplina.}
+
+\citeprompt{...}
 
 \begin{document}
 \imprimircapa
 \imprimirfolhaderosto*
 
 \begin{resumo}
-% TODO
+Este trabalho apresenta o diagnóstico e um plano de reestruturação para a Caxias Heavy Industries, fabricante de carrocerias de ônibus em crise financeira, operacional e de qualidade. A partir da análise de sete abas de dados estruturados fornecidas pela empresa e de entrevistas realizadas pelo Consultor com o cliente, foi identificado que a empresa possui carteira relevante de pedidos, mas opera com cobertura insuficiente sobre o passivo de dividendos e com entregas atrasadas que geram multa e adiam receita, pois prefeituras somente pagam na entrega. Foi desenvolvido um sistema multiagentes composto por Orquestrador, Financeiro, Operações, Suprimentos, Mercado/Coleta Externa e Revisor, no qual todas as contas são recalculadas por funções em Python, com dados externos do Banco Central via API SGS, e validação independente pelo Revisor com base nas regras do cliente. O plano consolidado, em horizonte de 12 meses, propõe 11 ações, das quais 8 aprovadas, 2 condicionais e 1 reprovada pelo Revisor, elevando a cobertura dos dividendos de 1,16 para 1,19 vezes e mantendo saldo mínimo positivo no proxy de caixa operacional. O estudo discute ainda limitações relevantes das hipóteses adotadas e recomendações para implementação.
+
+\begin{palavras-chave}
+Sistemas multiagentes. Large Language Models. Tool use. Reestruturação empresarial. Otimização operacional.
+\end{palavras-chave}
 \end{resumo}
 
 \pdfbookmark[0]{\listfigurename}{lof}\listoffigures*\cleardoublepage
@@ -33,55 +34,291 @@
 \textual
 
 \chapter{Introdução}
-% TODO: empresa, problema central, justificativa
+\section{Contextualização}
+
+A Caxias Heavy Industries é uma fabricante de ônibus com atuação concentrada em Santa Maria, atendendo principalmente prefeituras para o segmento urbano e empresas de turismo para o rodoviário. Produz carrocerias customizadas em cinco modelos: Urbano Standard 12m, Urbano Articulado 18m, Rodoviário Premium DD 14m, Micro-ônibus Executivo 9m e Urbano Elétrico 12m.
+
+A crise é agravada pela crise na América do Sul e pela redução das vendas. Os pedidos recebidos são insuficientes para cobrir os compromissos financeiros. Há dificuldades para pagar os dividendos mensalmente, com atrasos e juros acumulados, e existe risco de bloqueio das contas pela B3. A empresa está negociando acordos para lidar com a situação, mas o proprietário abriu ações sem investir de forma adequada.
+
+A prioridade definida pelo cliente é regularizar o pagamento dos dividendos e reduzir o risco financeiro, em prazo máximo de 12 meses, com carta branca para as mudanças necessárias, observado o vínculo CLT dos empregados.
+
+\section{Objetivo do trabalho}
+
+O objetivo deste trabalho é aplicar conceitos avançados de Arquitetura de Agentes Autônomos e LLMs, utilizando dados estruturados e informações externas, para reverter o déficit operacional, otimizar custos e maximizar os resultados do cenário. Optou-se por uma abordagem de Sistema Multiagentes, em razão da diversidade de domínios a avaliar, da necessidade de validação financeira das propostas e da existência de restrições checáveis automaticamente.
+
+\section{Justificativa}
+
+A justificativa da intervenção é dupla. Do ponto de vista operacional, a empresa tem capacidade teórica superior à demanda, mas enfrenta atrasos por fornecedores e paradas de maquinário de segunda mão, além de refugo elevado em três etapas. Do ponto de vista financeiro, depósitos de dividendos de 12 meses somam R\$ 33,3 milhões, dos quais R\$ 22,5 milhões exigíveis, enquanto o lucro bruto mensal das entregas é de aproximadamente R\$ 4,36 milhões, gerando cobertura de apenas 1,16 vez sobre a saída mensal de dividendos do plano.
 
 \chapter{Embasamento teórico}
-\section{IA generativa e LLMs}
-% TODO
-\section{Sistemas de agente único e multiagentes}
-% TODO
+\section{Inteligência Artificial Generativa e Large Language Models}
+
+A Inteligência Artificial Generativa refere-se a sistemas capazes de produzir novos conteúdos textuais, sonoros e visuais a partir de dados de treinamento, em contraste com sistemas puramente discriminativos \cite{vaswani2017attention}. Os Large Language Models (LLMs) são modelos treinados em larga escala para modelar a distribuição de linguagem, baseados na arquitetura Transformer, o que permite capturar dependências de longo prazo e executar tarefas variadas por meio de instruções em linguagem natural. Na prática, isso permite usar o mesmo modelo para classificar, resumir, planejar e interpretar resultados de ferramentas, desde que os números provenham de cálculos externos verificáveis.
+
+\section{Arquiteturas de agentes autônomos: single-agent e multi-agent}
+
+Um agente autônomo pode ser entendido como um sistema que percebe o ambiente, delibera e age para atingir objetivos, conforme a tradição de \cite{russell2020artificial} e \cite{wooldridge2009multiagent}. Na arquitetura de Agente Único com Validação Manual (Human-in-the-Loop), um único agente processa dados e propõe ações, com checagem por um operador humano. Na arquitetura Multi-Agentes, agentes especializados atuam em rede, cada um com papel, ferramentas e escopo próprios, coordenados por um orquestrador e mediados por um revisor.
+
+A literatura contemporânea indica vantagens do desenho multiagentes quando há decomposição natural de tarefas, necessidade de paralelização, especialização de ferramentas e separação entre proposição e crítica \cite{xi2023survey}. Para este caso, a decomposição em Financeiro, Operações, Suprimentos e Mercado foi motivada pelo questionário ao cliente, que elencou sete frentes de avaliação em áreas distintas. O desenho adotado mantém a separação entre quem propõe e quem veta, sem exigir aprovação humana obrigatória a cada passo, pois o cliente concedeu carta branca, mas sem execução automática: o plano final é entregue ao grupo e ao cliente.
+
 \section{Engenharia de prompt, uso de ferramentas e RAG}
-% TODO
-\section{Métodos de otimização e decisão}
-% TODO
 
-% Tabelas prontas em tabelas/*.tex (gerar_tabelas.py): \begin{table}\caption{..}\small\input{tabelas/propostas}\fonte{..}\end{table}
+A engenharia de prompt refere-se à formulação de instruções, contexto, exemplos e restrições para orientar o comportamento do modelo. O uso de ferramentas (Tool Use/Function Calling) refere-se à capacidade do modelo de invocar funções externas para obter dados ou executar cálculos, em vez de gerar números diretamente \cite{schick2023toolformer}. Essa separação é central neste trabalho: o LLM escolhe a função e interpreta o resultado, mas todo cálculo é feito em código Python.
+
+A Retrieval-Augmented Generation (RAG) consiste em recuperar trechos de documentos externos e inseri-los no contexto do modelo para fundamentar a resposta \cite{lewis2020retrieval}. No projeto, o RAG foi considerado como forma de manter respostas da entrevista e regras do cliente sempre no contexto do agente, porém não foi implementado como componente obrigatório; a base de conhecimento já está consolidada nas premissas validadas pelo Revisor e nos arquivos da entrevista.
+
+\section{Metodologias de otimização e tomada de decisão}
+
+No domínio industrial e financeiro, a otimização pode ser abordada por análise de margem por modelo, capacidade produtiva teórica por estação gargalo, análise de refugo/retrabalho, sensibilidade cambial e projeção de fluxo de caixa. A capacidade da linha foi calculada por estação, com tempo de ciclo efetivo igual ao ciclo multiplicado por um fator que considera refugo/retrabalho, e limite diário de horas por turno, com restrição noturna para a etapa de acoplamento ao chassi por iluminação e ruído. A decisão sobre cortes de produção ou de pessoal foi avaliada por comparação entre lucro perdido e capital liberado, e por retorno sobre rescisão, respeitando restrições de CLT, aviso de 30 dias a fornecedores e prazo máximo de 12 meses.
+
 \chapter{Aplicação prática}
-\section{Resultados da entrevista}
-% TODO: fase1-*.md, respostas-*.md
-\section{Arquitetura do sistema}
-% TODO: papel de cada agente, ferramentas, regras de validação
+\section{Resultados da entrevista com o cliente}
+
+A Fase I foi conduzida exclusivamente pelo Consultor, único canal com o cliente. Foram aplicadas 10 perguntas iniciais e 14 perguntas complementares, após análise preliminar das planilhas. Os principais achados foram:
+
+\begin{itemize}
+\item Caixa zero: a empresa não possui saldo de caixa; depende do lucro operacional para se autofinanciar.
+\item Dívida: restrita aos dividendos. Não há outros credores informados.
+\item Dividendos: prazo de 12 meses para regularizar; se o dividendo corrente estiver em dia, os atrasados podem ser pagos em 24 meses. Se não estiver em dia, há risco de bloqueio pela B3 e exigência judicial de minoritários.
+\item Inadimplência: o cliente informou que não é um problema; a planilha não contém contas a receber. Não há dados de inadimplência a tratar.
+\item Carta branca: "Podem fazer o que for necessário." Não há alçada de aprovação obrigatória; a validação pode ser interna pelo Revisor. Nada é executado automaticamente.
+\item Produção: empresa opera 24 horas, em 3 turnos de 8 horas, com mais operadores que o necessário. É possível demitir com rescisão e realocar. A etapa 80 (acoplamento ao chassi) não pode operar à noite, por falta de iluminação e limite de decibéis em área urbana.
+\item Qualidade: taxa de refugo/retrabalho é percentual sobre o tempo de ciclo. Custo direto já inclui mão de obra, folha salarial e impostos.
+\item Fornecedores: lead time é o tempo médio real de entrega. Chicotes da Yazaki não podem ser trocados. Inversores de potência são importados da China, sem produtor nacional, e é difícil estocar pelo valor elevado e pela situação financeira. Troca de fornecedor exige aviso de 30 dias. Não há dados de paradas de máquina nem de dias de atraso por pedido.
+\item Multa: pedidos pendentes geram multa contratual de 10\% do valor do ônibus, mais 0,1\% do valor total por dia de atraso. Prefeituras só pagam na entrega. Causa dos pendentes: fornecedor atrasando e gargalo na produção.
+\item Mercado: clientes atuais de Santa Maria. Estratégia de expansão por frotas sequenciais a prefeituras. Dobro-deck e pesquisa e desenvolvimento ficam para depois, primeiro deixar a empresa no verde.
+\item Elétrico: manter produção; redução admitida apenas se necessária para estabilizar a empresa, mas depois voltar a focar.
+\item Fontes externas: uso autorizado.
+\end{itemize}
+
+Essas respostas definiram as restrições modeladas no sistema: horizonte de 12 meses, CLT com custo de rescisão, aviso de 30 dias, Yazaki e inversor não substituíveis, caixa zero, double-deck fora do horizonte, e a regra de multa.
+
+\section{Arquitetura do sistema de agentes}
+
+O sistema implementado é multiagentes, com Orquestrador, quatro especialistas, Coleta Externa e Revisor. O diagrama de fluxo está representado na Figura~\ref{fig:arquitetura}.
+
 \begin{figure}[htb]
-  \caption{% TODO
-  }
-  \centering\includegraphics[width=\textwidth]{01_arquitetura.png}
-  \fonte{% TODO
-  }
+\caption{Arquitetura do sistema multiagentes: orquestrador, especialistas, revisor e plano consolidado}
+\label{fig:arquitetura}
+\centering\includegraphics[width=\textwidth]{01_arquitetura.png}
+\fonte{Arquitetura implementada em \texttt{agentes.py} e \texttt{ferramentas.py}.}
 \end{figure}
 
-\section{Análise dos dados}
-% TODO: margens, carteira, capacidade, refugo, fornecedores (figuras 02 a 06)
-\begin{figure}[htb]
-  \caption{% TODO
-  }
-  \centering\includegraphics[width=.8\textwidth]{02_margem_modelos.png}
-  \fonte{% TODO
-  }
-\end{figure}
-% Demais figuras: 03_carteira_pedidos, 04_capacidade_linha, 05_refugo_etapas, 06_leadtime_pecas
+\begin{table}[htb]
+\caption{Papel de cada agente, ferramentas e dados utilizados}
+\label{tab:agentes}
+\centering\small
+\begin{tabular}{@{}p{.22\textwidth}p{.38\textwidth}p{.32\textwidth}@{}}
+\toprule
+\textbf{Agente} & \textbf{Responsabilidade} & \textbf{Ferramentas / dados} \\
+\midrule
+Orquestrador & Distribui tarefas, resolve conflitos por priorizar caixa, monta o plano & Saídas de todos \\
+Financeiro & Margem, passivo de dividendos, fluxo mensal, risco de bloqueio; vetor de propostas sem caixa & \texttt{margem\_por\_modelo}, \texttt{passivo\_dividendos}, \texttt{plano\_dividendos} \\
+Operações & Capacidade, refugo, excesso de operadores, custo 24h, absenteísmo & \texttt{capacidade\_linha}, \texttt{qualidade\_linha}, \texttt{cenario\_turnos} \\
+Suprimentos & Atrasos por fornecedor, custo de BOM, alternativas, peças críticas & \texttt{leadtime\_criticos}, \texttt{sensibilidade\_cambio} \\
+Mercado/Coleta Externa & Novos clientes, segmentos, benchmarks; dados macroeconômicos & API BCB SGS (Selic, dólar, euro, IPCA); pesquisa externa no modo LLM \\
+Revisor & Valida números, restrições e coerência; devolve com motivo se reprovar & Recálculo independente direto da planilha \\
+\bottomrule
+\end{tabular}
+\fonte{Elaboração do grupo com base em \texttt{arquitetura-agentes.md}.}
+\end{table}
 
-\section{Soluções propostas e impacto}
-% TODO: plano-consolidado.md
+As ferramentas são funções Python puras sobre a planilha e, no caso do Coleta Externa, sobre a API do Banco Central. Toda conta é feita por função, nunca pelo LLM. O modo determinístico, que gerou todos os resultados deste relatório, usa agentes como funções Python que chamam as ferramentas e devolvem propostas com número. O modo LLM está implementado, com especialistas Claude/Gemini/local via tool use e pesquisa web para o Mercado, mas não foi executado no desenvolvimento por ausência de chave de API; portanto nenhum número do plano depende de saída de LLM.
+
+Dados externos consultados em 03/11/2026 via API SGS do Banco Central: Selic meta 13,75\% a.a.; dólar R\$ 5,4935; euro R\$ 6,15; IPCA do mês 0,82\%. A correção Selic dos dividendos atrasados somou R\$ 1.294.643 sobre principal de R\$ 22,5 milhões, com séries 4390 (Selic acumulada), 432 (Selic meta), 1 e 21619 (câmbio) e 433 (IPCA), com cópia em \texttt{dados\_externos.json}. Ressalta-se que a Selic foi adotada como índice de referência, pois juros e multa reais não foram informados pelo cliente.
+
+As regras de validação aplicadas pelo Revisor são:
+
+\begin{enumerate}
+\item Todo número do plano tem origem rastreável: aba/linha da planilha ou URL externa com data.
+\item Recalcular por código os valores-chave e comparar com o afirmado; divergência superior a 0,5\% devolve a proposta.
+\item Hipótese não confirmada é marcada como hipótese, como caixa zero, Selic como índice, dias de atraso e pessoas por estação.
+\item Respeitar restrições do cliente: horizonte de 12 meses, CLT com rescisão, aviso de 30 dias, Yazaki e inversor fixos, caixa zero.
+\item Nenhuma proposta pode piorar o caixa dos primeiros meses sem apontar fonte de financiamento.
+\item Multa por atraso (10\% + 0,1\%/dia) entra como custo de cenários que atrasem entregas.
+\item Propostas com economia e custo de implantação informam prazo de retorno.
+\end{enumerate}
+
+\section{Análise dos dados do cenário}
+
+A planilha contém sete abas: Modelos de Ônibus, Pedidos por Mês, Linha de Montagem, Catálogo de Peças, Lista de Materiais (BOM), Folha e Absenteísmo, Dividendos e Passivos. As fórmulas da planilha não possuem valores em cache, de modo que todos os derivados foram recalculados em código.
+
+\subsection{Carteira e margem}
+
+Em 12 meses, a carteira totalizou R\$ 273,9 milhões em 320 ônibus. Por situação: 231 entregues (69,4\%), 62 em produção (20,4\%) e 27 pendentes/atrasados (10,2\%). O pico mensal foi de 46 unidades. Por modelo, o elétrico responde por 34,8\% do valor, micro por 19,9\%, rodoviário por 17,9\%, articulado por 15,3\% e urbano por 12,2\%. A Figura~\ref{fig:carteira} mostra a evolução mensal.
+
 \begin{figure}[htb]
-  \caption{% TODO
-  }
-  \centering\includegraphics[width=\textwidth]{07_caixa_dividendos.png}
-  \fonte{% TODO
-  }
+\caption{Carteira de pedidos por mês e situação em 12 meses}
+\label{fig:carteira}
+\centering\includegraphics[width=.8\textwidth]{03_carteira_pedidos.png}
+\fonte{Dados de \texttt{Pedidos por Mês}, consolidados em \texttt{resultados-analise.md}.}
 \end{figure}
+
+A margem por modelo, pelo preço praticado, varia de 25,5\% (elétrico) a 32,3\% (rodoviário). O lucro por ônibus vai de R\$ 109 mil no micro a R\$ 496 mil no elétrico. Todos os modelos são lucrativos no custo direto, que segundo o cliente já inclui mão de obra e impostos.
+
+\begin{figure}[htb]
+\caption{Margem por modelo no preço praticado}
+\label{fig:margem}
+\centering\includegraphics[width=.8\textwidth]{02_margem_modelos.png}
+\fonte{\texttt{margem\_por\_modelo} em \texttt{ferramentas.py}.}
+\end{figure}
+
+\begin{table}[htb]
+\caption{Margem e lucro por modelo no preço praticado}
+\label{tab:margens}
+\centering\small
+\input{tabelas/margens}
+\fonte{\texttt{margem\_por\_modelo}.}
+\end{table}
+
+A BOM cobre apenas 3 dos 5 modelos e representa de 24,3\% a 37,2\% do custo direto, com 69,9\% de peças importadas no custo de BOM. A ausência de chassi na BOM e de dois modelos nela evidencia lacuna de dados.
+
+\subsection{Capacidade, gargalos e refugo}
+
+O tempo total de ciclo é 41,1 horas por veículo. A etapa mais lenta é Pintura e Tratamento Anticorrosivo (8,0 h). Com tempo de ciclo efetivo considerando refugo, a capacidade teórica é de 89 ônibus/mês em 3 turnos e 59 em 2 turnos, contra demanda média de 26,7 e pico de 46. Portanto, no papel, a linha dá conta, e mesmo em 2 turnos comporta o pico. Os atrasos reais indicam que o gargalo efetivo está fora do tempo de ciclo, em fornecedores e paradas de máquinas de segunda mão, não medidos na planilha.
+
+\begin{figure}[htb]
+\caption{Capacidade teórica por estação em 2 e 3 turnos}
+\label{fig:capacidade}
+\centering\includegraphics[width=.8\textwidth]{04_capacidade_linha.png}
+\fonte{\texttt{capacidade\_linha} com ciclo efetivo e restrição de 16 h na etapa 80.}
+\end{figure}
+
+\begin{table}[htb]
+\caption{Capacidade teórica por estação}
+\label{tab:capacidade}
+\centering\small
+\input{tabelas/capacidade}
+\fonte{\texttt{capacidade\_linha}.}
+\end{table}
+
+O rendimento de primeira passagem é 71\%. Três etapas concentram 66,6\% das taxas de refugo: Armação (etapa 20, 5,8\%), Vidros (etapa 50, 7,4\%) e Elétrica (etapa 60, 8,9\%). Contudo, o retrabalho dessas etapas equivale a apenas cerca de 4\% do ciclo total, de modo que o ganho financeiro direto de reduzir o refugo é pequeno; o ganho maior é entregar no prazo e evitar multa. A Figura~\ref{fig:refugo} ilustra as taxas.
+
+\begin{figure}[htb]
+\caption{Refugo/retrabalho por etapa da linha}
+\label{fig:refugo}
+\centering\includegraphics[width=.8\textwidth]{05_refugo_etapas.png}
+\fonte{\texttt{qualidade\_linha} a partir de \texttt{Linha de Montagem}.}
+\end{figure}
+
+\subsection{Fornecedores e lead time}
+
+O inversor/bateria CATL (PEC-ELE-402), de R\$ 480 mil, tem lead time de 60 dias e sem produtor nacional. O ar-condicionado Thermo King tem 45 dias, as portas Bode 30 dias, vidros 20 dias, chicote Yazaki 18 dias, bancos 15 dias, entre outros. O prazo mínimo de pedido à entrega é de 62 dias para o elétrico e 47 dias para urbano e rodoviário. O capital em trânsito no inversor é de aproximadamente R\$ 3,92 milhões, dado o volume de 4,1 elétricos por mês. Uma valorização cambial de 10\% elevaria custos em cerca de R\$ 245 mil por mês nas peças importadas da BOM.
+
+\begin{figure}[htb]
+\caption{Lead time por peça e criticidade}
+\label{fig:leadtime}
+\centering\includegraphics[width=.8\textwidth]{06_leadtime_pecas.png}
+\fonte{\texttt{leadtime\_criticos} e \texttt{sensibilidade\_cambio}.}
+\end{figure}
+
+\subsection{Pessoas, folha e absenteísmo}
+
+A folha mensal com encargos de 45\% é de R\$ 1.501.569 para 135 pessoas: 86 operacionais (R\$ 502 mil), 31 analistas (R\$ 339 mil), 13 gestores (R\$ 278 mil) e 5 da diretoria (R\$ 383 mil). A diretoria representa 25,5\% da folha. O absenteísmo operacional é de 5,5\%, analista de 2\%, gestor de 1,2\%. Cada 10 operadores a menos economizam cerca de R\$ 58 mil/mês antes da rescisão. O excedente de operadores depende de pessoas por estação, dado ausente na planilha: 10 em cenário conservador (4 por estação), 29 no central (3) e 48 no otimista (2).
+
+\subsection{Dividendos e passivos}
+
+Em 12 meses, os dividendos somam R\$ 33,3 milhões: R\$ 18,75 milhões acumulados em atraso (PN), R\$ 3,75 milhões com exigência judicial de minoritários e R\$ 10,8 milhões suspensos (ON). O total exigível é R\$ 22,5 milhões, ou 67,6\%. Isso equivale a 12,2\% da carteira do período e a 3,6 meses de lucro bruto médio. A média mensal é R\$ 2,775 milhões. A folha anual equivale a 9,5\% do valor já entregue.
+
+\begin{table}[htb]
+\caption{Dividendos por situação em 12 meses}
+\label{tab:dividendos}
+\centering\small
+\input{tabelas/dividendos}
+\fonte{\texttt{passivo\_dividendos}.}
+\end{table}
+
+\subsection{Inadimplência}
+
+O cliente informou que inadimplência não é problema, e a planilha não contém contas a receber. Portanto, diferentemente do enunciado que cita inadimplência como ponto crítico genérico, neste cenário não há evidencia de inadimplência; os atrasos relevantes são de dividendos e de entregas, que adiam receita de prefeituras que só pagam na entrega.
+
+\section{Soluções propostas e impacto esperado}
+
+O plano consolidado avaliou 11 propostas, com parecer do Revisor. A Tabela~\ref{tab:propostas} resume efeitos e pareceres.
+
+\begin{table}[htb]
+\caption{Propostas do sistema e parecer do Revisor}
+\label{tab:propostas}
+\centering\small
+\input{tabelas/propostas}
+\fonte{\texttt{plano-consolidado.md} gerado por \texttt{executar.py}.}
+\end{table}
+
+As propostas aprovadas incluem:
+
+\begin{itemize}
+\item \textbf{FIN-1 Regularizar dividendos:} corrente em dia e atrasados em 24 meses, com correção Selic, saída de R\$ 3.766.443/mês, incluindo corrente de R\$ 2.775.000 e parcela de R\$ 991.443 referente aos atrasados corrigidos. Condição do cliente para afastar bloqueio B3.
+\item \textbf{FIN-2 Entregar os 27 pendentes:} receita de R\$ 28.072.776 e lucro de R\$ 7.072.776 em entrega, além de evitar multa fixa de R\$ 2.807.278 e R\$ 28.073/dia. Maior alavanca de caixa de curto prazo.
+\item \textbf{OPE-2 Manutenção preventiva nas etapas 20, 50 e 60:} meta de cortar 50\% do refugo, com operadores realocados, economia estimada de R\$ 2.156/mês; ganho principal é cumprimento de prazo.
+\item \textbf{SUP-1 Comprar peças longas no pedido firme:} 45 dias para ar-condicionado, 30 para portas, 60 para inversor, sem estoque especulativo, com ganho pontual de R\$ 421.092 por evitar 15 dias de multa.
+\item \textbf{SUP-2 Cotar alternativas} para ar-condicionado e portas, únicas importadas trocáveis com aviso de 30 dias; sem ganho somado ao plano por falta de cotação real.
+\item \textbf{SUP-3 Elétrico só contra pedido firme} e negociar pagamento do inversor na entrega; capital liberado possível, não somado ao plano.
+\item \textbf{MER-1 Priorizar modelos de maior lucro por ônibus} e frotas sequenciais a prefeituras; cada ônibus mensal adicional do rodoviário vale R\$ 439 mil em lucro bruto. Sensibilidade, não previsão, sem demanda externa mapeada.
+\item \textbf{MER-2 Fase 2 double-deck e novos segmentos:} fora do horizonte financeiro.
+\end{itemize}
+
+As condicionais foram:
+
+\begin{itemize}
+\item \textbf{FIN-4 Diretoria -20\% (R\$ 76.610/mês):} depende de parecer jurídico sobre irredutibilidade salarial e vínculo da diretoria.
+\item \textbf{OPE-1 Dois turnos e dimensionamento de operadores:} economia conservadora de R\$ 58.415/mês, com rescisão estimada de R\$ 112.801 (2,8 salários, CLT) e retorno em 1,9 meses. Condicional porque caixa é zero para pagar rescisão e é preciso validar escala real e realocar antes de desligar.
+\end{itemize}
+
+A proposta reprovada foi:
+
+\begin{itemize}
+\item \textbf{FIN-3 Reduzir o elétrico em 50\% por 12 meses:} o Revisor reprovou porque o lucro perdido de R\$ 12.156.697 supera em muito o capital liberado de R\$ 1.960.000 no inversor, e o elétrico tem o maior lucro por ônibus.
+\end{itemize}
+
+O resultado consolidado, em proxy de caixa operacional definido como lucro bruto das entregas menos dividendos, é apresentado na Tabela~\ref{tab:projecao} e Figura~\ref{fig:caixa}. O lucro bruto base é R\$ 4.363.131/mês. A cobertura sobe de 1,16x sem plano para 1,19x com plano. O saldo mínimo é R\$ 1.017.779 no mês 1, após ganho de R\$ 421.092 com SUP-1. No mês 2, somam-se R\$ 7.072.776 de FIN-2. As melhorias recorrentes somam R\$ 137.181/mês a partir do mês 4. O saldo acumulado em 12 meses é R\$ 15.852.553. É importante enfatizar que esse saldo não é caixa real: é proxy, sem despesas fora do custo direto nem outras dívidas, e o cliente informou caixa zero inicial.
+
+\begin{table}[htb]
+\caption{Projeção de 12 meses do proxy de caixa operacional}
+\label{tab:projecao}
+\centering\footnotesize
+\input{tabelas/projecao}
+\fonte{\texttt{consolidar} em \texttt{agentes.py}.}
+\end{table}
+
+\begin{figure}[htb]
+\caption{Fluxo de caixa proxy: lucro bruto, melhorias, pontuais e dividendos}
+\label{fig:caixa}
+\centering\includegraphics[width=\textwidth]{07_caixa_dividendos.png}
+\fonte{Projeção em \texttt{plano-consolidado.md}.}
+\end{figure}
+
+Qualitativamente, o plano restabelece disciplina de compras vinculada à carteira firme, reduz exposição a atrasos por lead time, ataca o refugo nos pontos críticos sem depender dele para o caixa, formaliza acordo de dividendos compatível com a ordem do cliente e preserva o elétrico, apesar de menor margem percentual, pelo maior lucro absoluto por unidade.
 
 \chapter{Conclusão}
-% TODO: síntese, limitações, recomendações
+\section{Síntese dos resultados}
+
+O sistema multiagentes demonstrou ser adequado ao problema, pois decompôs domínios independentes, aplicou validação independente e rejeitou uma alternativa que parecia aliviar caixa mas destruía valor. O diagnóstico mostra que a empresa não tem problema de demanda, mas de conversão de demanda em caixa: pedidos faturáveis só geram receita ao entregar, e entregas atrasadas geram multa. O plano eleva a cobertura de dividendos e mantém saldo proxy positivo desde o primeiro mês, ao priorizar pendentes e compras no pedido firme.
+
+\section{Limitações do projeto}
+
+\begin{itemize}
+\item O saldo do plano é proxy: lucro bruto (preço menos custo direto) menos dividendos. Não inclui despesas fora do custo direto nem outras dívidas; caixa inicial é zero por informação do cliente.
+\item Capacidade teórica não inclui paradas de máquinas de segunda mão; atrasos reais indicam capacidade efetiva menor.
+\item Operadores excedentes dependem de pessoas por estação, desconhecido, e de rescisão estimada em 2,8 salários. Quadro calculado por carga de trabalho, não por escala de turno.
+\item Multa supõe 0,1\%/dia sobre o valor dos pedidos atrasados; dias de atraso desconhecidos.
+\item Selic adotada como índice de referência; juros e multa reais dos dividendos não informados.
+\item Dividendos ON suspensos de R\$ 10,8 milhões ficaram fora da quitação, a confirmar.
+\item Custo direto e BOM incompletos: BOM cobre 3 de 5 modelos e chassi não aparece nela.
+\item Modo LLM nunca executado; resultados são determinísticos. Pesquisa de mercado externa depende do modo LLM e não há dado de mercado no plano.
+\item Double-deck e P\&D ficaram para fase 2 por decisão do cliente.
+\end{itemize}
+
+\section{Recomendações para implementação}
+
+\begin{enumerate}
+\item Confirmar juros e multa reais dos dividendos atrasados e incluir dividendos ON suspensos ou formalizar sua manutenção suspensa.
+\item Levantar dias de atraso por pedido pendente, custo real do refugo e horas de parada de máquina para recalibrar capacidade efetiva.
+\item Cotar fornecedores alternativos para ar-condicionado e portas e negociar condição de pagamento do inversor CATL na entrega.
+\item Validar escala real de turnos e pessoas por estação antes de qualquer desligamento; priorizar realocação para manutenção e qualidade.
+\item Obter parecer jurídico sobre redução de remuneração da diretoria e vínculo funcional.
+\item Executar modo LLM com chave de API e busca web para mapear demanda fora de Santa Maria e editais, sem alterar números determinísticos até nova validação.
+\item Após estabilização de 12 meses, planejar fase 2 para double-deck e novos segmentos, com orçamento próprio de P\&D.
+\end{enumerate}
 
 \postextual
 \bibliography{referencias}

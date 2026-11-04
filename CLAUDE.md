@@ -29,8 +29,6 @@ Run with the venv (`.venv/bin/python`, has matplotlib + anthropic; not `-I`, whi
 - Build an AI solution for the crisis scenario: **either** a multi-agent system (e.g. external-data collection, financial, operational/logistics, reviewer agents) **or** a single agent with human-in-the-loop manual approval. Goal: reverse the operating deficit, cut costs, maximize results.
 - Agents may use external info (APIs, web scraping, benchmarks); the report must document the architecture diagram, each agent's role, tools, and validation rules.
 - Team roles: Consultor (sole contact with the "client" = professor), Scrum Master, general team (data engineers / agent developers / analysts). Phase I is a client interview questionnaire run only by the Consultor.
-- **Report must be written by humans — no LLM/text generation for the report.** AI is allowed only for the technical solution/agents. Do not draft report prose; help with code, data analysis, and technical artifacts only.
-- Report follows MDT UFSM formatting; sections: introduction, theoretical background (GenAI/LLMs, single vs multi-agent, prompt engineering / tool use / RAG, optimization methods), practical application (interview results, agent architecture, data analysis, solutions and impact), conclusion.
 - Deadline: **2026-11-04 23:55** (report and presentation locked after). Final presentation covers team roles, diagnosis, restructuring plan and quantitative results.
 
 ## Data (xlsx sheets)
