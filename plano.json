@@ -1,0 +1,791 @@
+{
+ "consolidado": {
+  "base_mensal": 4363130.760833333,
+  "saida_dividendos": 3766443.444038641,
+  "cobertura_sem_plano": 1.1584219504846414,
+  "cobertura_com_plano": 1.1948438016810028,
+  "melhorias_mensais": 137180.84265828645,
+  "unicos": 7493867.79225,
+  "custos_unicos": 112800.78697674414,
+  "saldo_12m": 15852552.772434138,
+  "saldo_minimo": 1017778.9590446921,
+  "projecao": [
+   {
+    "mes": 1,
+    "base": 4363130.760833333,
+    "melhorias": 0,
+    "unico": 421091.64225,
+    "saida": 3766443.444038641,
+    "saldo_acumulado": 1017778.9590446921
+   },
+   {
+    "mes": 2,
+    "base": 4363130.760833333,
+    "melhorias": 0.0,
+    "unico": 7072776.15,
+    "saida": 3766443.444038641,
+    "saldo_acumulado": 8687242.425839383
+   },
+   {
+    "mes": 3,
+    "base": 4363130.760833333,
+    "melhorias": 76610.3817,
+    "unico": -112800.78697674414,
+    "saida": 3766443.444038641,
+    "saldo_acumulado": 9247739.337357331
+   },
+   {
+    "mes": 4,
+    "base": 4363130.760833333,
+    "melhorias": 137180.84265828645,
+    "unico": 0,
+    "saida": 3766443.444038641,
+    "saldo_acumulado": 9981607.49681031
+   },
+   {
+    "mes": 5,
+    "base": 4363130.760833333,
+    "melhorias": 137180.84265828645,
+    "unico": 0,
+    "saida": 3766443.444038641,
+    "saldo_acumulado": 10715475.656263288
+   },
+   {
+    "mes": 6,
+    "base": 4363130.760833333,
+    "melhorias": 137180.84265828645,
+    "unico": 0.0,
+    "saida": 3766443.444038641,
+    "saldo_acumulado": 11449343.815716267
+   },
+   {
+    "mes": 7,
+    "base": 4363130.760833333,
+    "melhorias": 137180.84265828645,
+    "unico": 0,
+    "saida": 3766443.444038641,
+    "saldo_acumulado": 12183211.975169245
+   },
+   {
+    "mes": 8,
+    "base": 4363130.760833333,
+    "melhorias": 137180.84265828645,
+    "unico": 0,
+    "saida": 3766443.444038641,
+    "saldo_acumulado": 12917080.134622224
+   },
+   {
+    "mes": 9,
+    "base": 4363130.760833333,
+    "melhorias": 137180.84265828645,
+    "unico": 0,
+    "saida": 3766443.444038641,
+    "saldo_acumulado": 13650948.294075202
+   },
+   {
+    "mes": 10,
+    "base": 4363130.760833333,
+    "melhorias": 137180.84265828645,
+    "unico": 0,
+    "saida": 3766443.444038641,
+    "saldo_acumulado": 14384816.45352818
+   },
+   {
+    "mes": 11,
+    "base": 4363130.760833333,
+    "melhorias": 137180.84265828645,
+    "unico": 0,
+    "saida": 3766443.444038641,
+    "saldo_acumulado": 15118684.61298116
+   },
+   {
+    "mes": 12,
+    "base": 4363130.760833333,
+    "melhorias": 137180.84265828645,
+    "unico": 0,
+    "saida": 3766443.444038641,
+    "saldo_acumulado": 15852552.772434138
+   }
+  ]
+ },
+ "externo": {
+  "cotacoes": {
+   "consultado_em": "2026-11-03",
+   "selic_meta_aa": {
+    "data": "04/11/2026",
+    "valor": "13.75"
+   },
+   "usd_brl": {
+    "data": "03/11/2026",
+    "valor": "5.4935"
+   },
+   "eur_brl": {
+    "data": "03/11/2026",
+    "valor": "6.1500000"
+   },
+   "ipca_mes": {
+    "data": "01/09/2026",
+    "valor": "0.82"
+   }
+  },
+  "encargos": {
+   "parcelas": [
+    {
+     "mes": "Dez/25",
+     "principal": 3750000.0,
+     "meses_atraso": 10,
+     "fator": 1.1168199698429484,
+     "encargos": 438074.8869110565
+    },
+    {
+     "mes": "Fev/26",
+     "principal": 3750000.0,
+     "meses_atraso": 8,
+     "fator": 1.0930825883542477,
+     "encargos": 349059.7063284287
+    },
+    {
+     "mes": "Abr/26",
+     "principal": 3750000.0,
+     "meses_atraso": 6,
+     "fator": 1.068369189776938,
+     "encargos": 256384.46166351775
+    },
+    {
+     "mes": "Jun/26",
+     "principal": 3750000.0,
+     "meses_atraso": 4,
+     "fator": 1.0453507338731687,
+     "encargos": 170065.25202438256
+    },
+    {
+     "mes": "Ago/26",
+     "principal": 3750000.0,
+     "meses_atraso": 2,
+     "fator": 1.0216155599999999,
+     "encargos": 81058.3499999995
+    },
+    {
+     "mes": "Out/26",
+     "principal": 3750000.0,
+     "meses_atraso": 0,
+     "fator": 1,
+     "encargos": 0.0
+    }
+   ],
+   "principal": 22500000.0,
+   "encargos": 1294642.6569273851,
+   "consultado_em": "2026-11-03"
+  }
+ },
+ "propostas": [
+  {
+   "id": "FIN-1",
+   "agente": "Financeiro",
+   "titulo": "Regularizar dividendos: corrente em dia e atrasados em 24 meses",
+   "descricao": "Pagar o dividendo corrente todo mês e quitar em 24 meses o exigível (atraso PN + exigência judicial) com correção Selic, condição dada pelo cliente para afastar o bloqueio pela B3.",
+   "tipo": "compromisso",
+   "impacto_mensal": -991443.444038641,
+   "impacto_unico": 0.0,
+   "custo_unico": 0.0,
+   "prazo_meses": 1,
+   "fontes": [
+    "passivo_dividendos",
+    "plano_dividendos",
+    "encargos_atrasados_selic",
+    "aba Dividendos e Passivos",
+    "BCB SGS 4390"
+   ],
+   "hipoteses": [
+    "Correção pela Selic acumulada (índice de referência; juros e multa reais não informados)",
+    "Dividendos ON suspensos (R$ 10,8 mi) ficam fora da quitação; confirmar com o cliente",
+    "Dividendo corrente = média mensal do cronograma da planilha, com as ações atuais"
+   ],
+   "afirmacoes": {
+    "dividendos_total_12m": 33300000.0,
+    "dividendos_exigivel": 22500000.0
+   },
+   "pecas": [],
+   "dados": {
+    "atraso_a_quitar": 23794642.656927384,
+    "parcela_mensal": 991443.444038641,
+    "corrente_mensal": 2775000.0,
+    "saida_mensal": 3766443.444038641,
+    "encargos_selic": 1294642.6569273851,
+    "passivo": {
+     "por_status": {
+      "Suspenso p/ Reestruturação": 10800000.0,
+      "Acumulado em Atraso": 18750000.0,
+      "Exigência Judicial dos Minoritários": 3750000.0
+     },
+     "total": 33300000.0,
+     "exigivel": 22500000.0,
+     "suspenso": 10800000.0,
+     "corrente_mensal": 2775000.0
+    }
+   },
+   "requer_validacao": "",
+   "status": "aprovada",
+   "motivos": []
+  },
+  {
+   "id": "FIN-2",
+   "agente": "Financeiro",
+   "titulo": "Priorizar a entrega dos 27 pedidos pendentes",
+   "descricao": "Prefeitura só paga na entrega: os pendentes seguram a receita e geram multa (10% + 0,1%/dia). Destravá-los é a maior alavanca de caixa de curto prazo.",
+   "tipo": "acao",
+   "impacto_mensal": 0.0,
+   "impacto_unico": 7072776.15,
+   "custo_unico": 0.0,
+   "prazo_meses": 2,
+   "fontes": [
+    "pendentes",
+    "multa_pendentes",
+    "aba Pedidos por Mês"
+   ],
+   "hipoteses": [
+    "Lucro = preço praticado − custo direto (já inclui mão de obra e impostos, segundo o cliente)",
+    "Dias de atraso e a causa de cada pendente não constam da planilha"
+   ],
+   "afirmacoes": {
+    "receita_pendentes": 28072776.15,
+    "lucro_pendentes": 7072776.15,
+    "multa_fixa_pendentes": 2807277.615
+   },
+   "pecas": [],
+   "dados": {
+    "unidades": 27.0,
+    "receita": 28072776.15,
+    "lucro": 7072776.15,
+    "multa_fixa": 2807277.615,
+    "multa_por_dia": 28072.776149999998,
+    "multa_30d": 3649460.8995000003
+   },
+   "requer_validacao": "",
+   "status": "aprovada",
+   "motivos": []
+  },
+  {
+   "id": "FIN-3",
+   "agente": "Financeiro",
+   "titulo": "Reduzir a produção do elétrico para aliviar caixa (alternativa avaliada)",
+   "descricao": "O cliente aceita reduzir o elétrico se for preciso para estabilizar a empresa. Corte de 50% por 12 meses: compara o lucro perdido com o capital que deixa de ficar parado no inversor.",
+   "tipo": "reducao_producao",
+   "impacto_mensal": 0.0,
+   "impacto_unico": 0.0,
+   "custo_unico": 0.0,
+   "prazo_meses": 2,
+   "fontes": [
+    "margem_por_modelo",
+    "leadtime_criticos"
+   ],
+   "hipoteses": [
+    "Capital liberado = metade do capital em trânsito do inversor (60 dias de lead time)"
+   ],
+   "afirmacoes": {
+    "lucro_unid_ele": 496191.7169387755
+   },
+   "pecas": [],
+   "dados": {
+    "lucro_perdido_12m": 12156697.064999998,
+    "capital_liberado": 1959999.9999999998
+   },
+   "requer_validacao": "",
+   "status": "reprovada",
+   "motivos": [
+    "lucro perdido em 12 meses (R$ 12,156,697) supera o capital liberado (R$ 1,960,000); o elétrico tem o maior lucro por ônibus"
+   ]
+  },
+  {
+   "id": "FIN-4",
+   "agente": "Financeiro",
+   "titulo": "Revisar a remuneração da diretoria (-20%)",
+   "descricao": "A diretoria (5 pessoas) custa R$ 383.052/mês. 25.5% da folha.",
+   "tipo": "acao",
+   "impacto_mensal": 76610.3817,
+   "impacto_unico": 0.0,
+   "custo_unico": 0.0,
+   "prazo_meses": 2,
+   "fontes": [
+    "folha",
+    "aba Folha e Absenteísmo"
+   ],
+   "hipoteses": [
+    "Redução de 20% é cenário, não recomendação fechada"
+   ],
+   "afirmacoes": {
+    "custo_diretoria_mensal": 383051.90849999996
+   },
+   "pecas": [],
+   "dados": {},
+   "requer_validacao": "Parecer jurídico: irredutibilidade salarial (CLT) e vínculo da diretoria (CLT ou estatutário)",
+   "status": "condicional",
+   "motivos": [
+    "Parecer jurídico: irredutibilidade salarial (CLT) e vínculo da diretoria (CLT ou estatutário)"
+   ]
+  },
+  {
+   "id": "OPE-1",
+   "agente": "Operações",
+   "titulo": "Operar em 2 turnos (3º turno só nos picos) e dimensionar o quadro de operadores",
+   "descricao": "Com 2 turnos a linha comporta 59 veículos/mês contra pico de 46. Excedente de operadores: 10 (equipe de 4 por estação, conservador), 29 (3, central), 48 (2). Realocar para manutenção e qualidade antes de desligar; demitir só o que sobrar.",
+   "tipo": "demissao",
+   "impacto_mensal": 58414.69325581394,
+   "impacto_unico": 0.0,
+   "custo_unico": 112800.78697674414,
+   "prazo_meses": 3,
+   "fontes": [
+    "cenario_turnos",
+    "capacidade_linha",
+    "folha",
+    "aba Linha de Montagem",
+    "aba Folha e Absenteísmo"
+   ],
+   "hipoteses": [
+    "Pessoas simultâneas por estação desconhecidas: 4 (conservador), 3 (central), 2 (otimista)",
+    "Ocupação produtiva de 75% e 20% extra para manutenção das máquinas de segunda mão",
+    "Rescisão = 2.8 salários base (aviso, multa de 40% do FGTS, 13º e férias proporcionais)",
+    "Quadro calculado pela carga de trabalho, não por escala de turno: validar a escala real",
+    "Capacidade teórica: não considera paradas das máquinas de segunda mão"
+   ],
+   "afirmacoes": {
+    "capacidade_2_turnos": 59.11330049261084,
+    "custo_medio_operador": 5841.469325581394,
+    "demanda_pico": 46.0
+   },
+   "pecas": [],
+   "dados": {
+    "conservador": {
+     "turnos": 2,
+     "equipe": 4,
+     "cobre_pico": true,
+     "capacidade": 59.11330049261084,
+     "demanda_pico": 46.0,
+     "uso_pico": 0.7781666666666667,
+     "operadores_atuais": 86,
+     "operadores_necessarios": 76,
+     "excedente": 10,
+     "economia_mensal": 58414.69325581394,
+     "custo_rescisao": 112800.78697674414,
+     "payback_meses": 1.9310344827586206
+    },
+    "central": {
+     "turnos": 2,
+     "equipe": 3,
+     "cobre_pico": true,
+     "capacidade": 59.11330049261084,
+     "demanda_pico": 46.0,
+     "uso_pico": 0.7781666666666667,
+     "operadores_atuais": 86,
+     "operadores_necessarios": 57,
+     "excedente": 29,
+     "economia_mensal": 169402.61044186042,
+     "custo_rescisao": 327122.282232558,
+     "payback_meses": 1.9310344827586203
+    },
+    "otimista": {
+     "turnos": 2,
+     "equipe": 2,
+     "cobre_pico": true,
+     "capacidade": 59.11330049261084,
+     "demanda_pico": 46.0,
+     "uso_pico": 0.7781666666666667,
+     "operadores_atuais": 86,
+     "operadores_necessarios": 38,
+     "excedente": 48,
+     "economia_mensal": 280390.5276279069,
+     "custo_rescisao": 541443.7774883719,
+     "payback_meses": 1.9310344827586208
+    }
+   },
+   "requer_validacao": "",
+   "status": "condicional",
+   "motivos": [
+    "rescisão de R$ 112,801 com caixa zero: indicar fonte; retorno em 1.9 meses"
+   ]
+  },
+  {
+   "id": "OPE-2",
+   "agente": "Operações",
+   "titulo": "Manutenção preventiva e padrão de trabalho nas etapas 20, 50 e 60",
+   "descricao": "As três etapas com refugo/retrabalho acima de 5% concentram a maior parte das horas perdidas. Meta: cortar 50% delas, usando operadores realocados da OPE-1.",
+   "tipo": "acao",
+   "impacto_mensal": 2155.7677024725162,
+   "impacto_unico": 0.0,
+   "custo_unico": 0.0,
+   "prazo_meses": 3,
+   "fontes": [
+    "qualidade_linha",
+    "aba Linha de Montagem"
+   ],
+   "hipoteses": [
+    "Custo/hora do operador e equipe de 3 por estação (premissas)",
+    "Ganho financeiro direto é pequeno: o retrabalho é 4% do ciclo; o ganho maior é entregar no prazo"
+   ],
+   "afirmacoes": {
+    "horas_perdidas_por_veiculo": 1.6238
+   },
+   "pecas": [],
+   "dados": {
+    "ciclo_total_h": 41.1,
+    "horas_perdidas_por_veiculo": 1.6238,
+    "pct_do_ciclo": 0.03950851581508515,
+    "rendimento_primeira_passagem": 0.7102163230195955,
+    "criticas": [
+     {
+      "etapa": 20,
+      "nome": "Armação da Estrutura Lateral e Teto",
+      "refugo": 0.058,
+      "horas": 0.35960000000000003
+     },
+     {
+      "etapa": 50,
+      "nome": "Montagem de Vidros e Parabrisas",
+      "refugo": 0.074,
+      "horas": 0.21459999999999999
+     },
+     {
+      "etapa": 60,
+      "nome": "Instalação Elétrica e Mapeamento Chicote",
+      "refugo": 0.089,
+      "horas": 0.4895
+     }
+    ],
+    "custo_hora_operador": 33.19016662262157,
+    "custo_mensal_retrabalho": 4311.5354049450325
+   },
+   "requer_validacao": "",
+   "status": "aprovada",
+   "motivos": []
+  },
+  {
+   "id": "SUP-1",
+   "agente": "Suprimentos",
+   "titulo": "Comprar as peças longas no ato do pedido firme (ar-condicionado 45 d, portas 30 d, inversor 60 d)",
+   "descricao": "Alinhar o calendário de compras à carteira firme. sem estoque especulativo (cliente: estocar é inviável). Cada dia de atraso evitado nos pendentes poupa R$ 28.073 de multa.",
+   "tipo": "acao",
+   "impacto_mensal": 0.0,
+   "impacto_unico": 421091.64225,
+   "custo_unico": 0.0,
+   "prazo_meses": 1,
+   "fontes": [
+    "leadtime_criticos",
+    "multa_pendentes",
+    "aba Catálogo de Peças"
+   ],
+   "hipoteses": [
+    "Antecipar as compras evita 15 dias de multa diária (hipótese)",
+    "O capital em trânsito já existe no ciclo atual: nenhuma peça é estocada"
+   ],
+   "afirmacoes": {
+    "multa_por_dia": 28072.776149999998
+   },
+   "pecas": [],
+   "dados": {
+    "ranking": [
+     {
+      "cod": "PEC-ELE-402",
+      "desc": "Inversor de Potência e Bateria LFP 350kWh",
+      "forn": "CATL Tech",
+      "pais": "China",
+      "preco": 480000.0,
+      "lead": 60.0,
+      "troca": "Sem produtor nacional (importado da China)"
+     },
+     {
+      "cod": "PEC-MOT-301",
+      "desc": "Conjunto Ar Condicionado 120.000 BTU",
+      "forn": "Thermo King",
+      "pais": "EUA / Importado",
+      "preco": 28500.0,
+      "lead": 45.0,
+      "troca": "Sim, com aviso de 30 dias"
+     },
+     {
+      "cod": "PEC-PORT-501",
+      "desc": "Sistema de Porta Pneumática Completa",
+      "forn": "Bode Eletrônica",
+      "pais": "Alemanha",
+      "preco": 6500.0,
+      "lead": 30.0,
+      "troca": "Sim, com aviso de 30 dias"
+     },
+     {
+      "cod": "PEC-VID-101",
+      "desc": "Parabrisa Inteiriço Laminado Térmico",
+      "forn": "Vidroplan Auto",
+      "pais": "Brasil",
+      "preco": 3400.0,
+      "lead": 20.0,
+      "troca": "Sim, com aviso de 30 dias"
+     },
+     {
+      "cod": "PEC-ELE-401",
+      "desc": "Chicote Elétrico Multiplex Principal",
+      "forn": "Yazaki Brasil",
+      "pais": "Brasil",
+      "preco": 4200.0,
+      "lead": 18.0,
+      "troca": "Não (cliente: chicote Yazaki é fixo)"
+     },
+     {
+      "cod": "PEC-BAN-201",
+      "desc": "Poltrona Executiva Reclinável em Couro",
+      "forn": "Marcopolo/Seating",
+      "pais": "Brasil",
+      "preco": 1100.0,
+      "lead": 15.0,
+      "troca": "Sim, com aviso de 30 dias"
+     },
+     {
+      "cod": "PEC-EST-002",
+      "desc": "Chapa Alumínio Estampada Lateral",
+      "forn": "Novelis do Brasil",
+      "pais": "Brasil",
+      "preco": 1250.0,
+      "lead": 12.0,
+      "troca": "Sim, com aviso de 30 dias"
+     },
+     {
+      "cod": "PEC-VID-102",
+      "desc": "Janela Lateral Temperada Fumê",
+      "forn": "AGC Vidros",
+      "pais": "Brasil",
+      "preco": 480.0,
+      "lead": 10.0,
+      "troca": "Sim, com aviso de 30 dias"
+     },
+     {
+      "cod": "PEC-ILU-701",
+      "desc": "Conjunto Farol Full LED Dianteiro",
+      "forn": "Arteb Faróis",
+      "pais": "Brasil",
+      "preco": 2100.0,
+      "lead": 10.0,
+      "troca": "Sim, com aviso de 30 dias"
+     },
+     {
+      "cod": "PEC-PNT-601",
+      "desc": "Lote Tinta Primer Epóxi Cataforético (200L)",
+      "forn": "PPG Industries",
+      "pais": "Brasil",
+      "preco": 9200.0,
+      "lead": 8.0,
+      "troca": "Sim, com aviso de 30 dias"
+     },
+     {
+      "cod": "PEC-EST-001",
+      "desc": "Perfil Estrutural Aço Galvanizado 6m",
+      "forn": "Açotubo Indústria",
+      "pais": "Brasil",
+      "preco": 850.0,
+      "lead": 7.0,
+      "troca": "Sim, com aviso de 30 dias"
+     },
+     {
+      "cod": "PEC-BAN-202",
+      "desc": "Banda de Assento Urbano Injetado",
+      "forn": "Plastilindo",
+      "pais": "Brasil",
+      "preco": 180.0,
+      "lead": 5.0,
+      "troca": "Sim, com aviso de 30 dias"
+     }
+    ],
+    "modelos": [
+     {
+      "cod": "BUS-URB-12M",
+      "lead_max": 45.0,
+      "peca": "PEC-MOT-301",
+      "prazo_minimo": 46.7125
+     },
+     {
+      "cod": "BUS-ROD-14M",
+      "lead_max": 45.0,
+      "peca": "PEC-MOT-301",
+      "prazo_minimo": 46.7125
+     },
+     {
+      "cod": "BUS-ELE-12M",
+      "lead_max": 60.0,
+      "peca": "PEC-ELE-402",
+      "prazo_minimo": 61.7125
+     }
+    ],
+    "ciclo_dias": 1.7125000000000001,
+    "eletricos_por_mes": 4.083333333333333,
+    "gasto_inversor_mensal": 1959999.9999999998,
+    "capital_em_transito": 3919999.9999999995
+   },
+   "requer_validacao": "",
+   "status": "aprovada",
+   "motivos": []
+  },
+  {
+   "id": "SUP-2",
+   "agente": "Suprimentos",
+   "titulo": "Cotar alternativas para ar-condicionado (Thermo King) e portas (Bode)",
+   "descricao": "São as peças com maior lead time depois do inversor e as únicas importadas que o cliente permite trocar (aviso de 30 dias). Cotar fornecedores nacionais ou com menor prazo; a troca só vale se reduzir prazo ou custo.",
+   "tipo": "troca_fornecedor",
+   "impacto_mensal": 0.0,
+   "impacto_unico": 0.0,
+   "custo_unico": 0.0,
+   "prazo_meses": 3,
+   "fontes": [
+    "leadtime_criticos",
+    "sensibilidade_cambio",
+    "BCB SGS 1 e 21619"
+   ],
+   "hipoteses": [
+    "Sem cotação real, o ganho não é somado ao plano; exposição cambial mostrada como risco"
+   ],
+   "afirmacoes": {
+    "exposicao_cambial_10pct": 244662.49999999997
+   },
+   "pecas": [
+    "PEC-MOT-301",
+    "PEC-PORT-501"
+   ],
+   "dados": {
+    "var_pct": 10,
+    "importado_mensal": 2446624.9999999995,
+    "share_importado": 0.6992699697255723,
+    "custo_extra_mensal": 244662.49999999997
+   },
+   "requer_validacao": "",
+   "status": "aprovada",
+   "motivos": []
+  },
+  {
+   "id": "SUP-3",
+   "agente": "Suprimentos",
+   "titulo": "Elétrico só contra pedido firme e negociar pagamento do inversor na entrega",
+   "descricao": "O inversor/bateria (R$ 480 mil. 60 dias. sem produtor nacional) prende cerca de R$ 3.920.000 em trânsito. Condição de pagamento da CATL não informada; é a negociação a abrir.",
+   "tipo": "acao",
+   "impacto_mensal": 0.0,
+   "impacto_unico": 0.0,
+   "custo_unico": 0.0,
+   "prazo_meses": 3,
+   "fontes": [
+    "leadtime_criticos",
+    "aba Catálogo de Peças"
+   ],
+   "hipoteses": [
+    "Capital liberado possível, não somado ao plano (depende da negociação)"
+   ],
+   "afirmacoes": {
+    "capital_inversor_transito": 3919999.9999999995
+   },
+   "pecas": [],
+   "dados": {
+    "capital": 3919999.9999999995
+   },
+   "requer_validacao": "",
+   "status": "aprovada",
+   "motivos": []
+  },
+  {
+   "id": "MER-1",
+   "agente": "Mercado",
+   "titulo": "Priorizar a venda dos modelos de maior lucro por ônibus (frotas sequenciais para prefeituras)",
+   "descricao": "O lucro por ônibus varia de R$ 109 mil (micro) a R$ 496 mil (elétrico). Cada ônibus a mais por mês do rodoviário vale R$ 439 mil de lucro bruto por mês; é sensibilidade, não previsão.",
+   "tipo": "acao",
+   "impacto_mensal": 0.0,
+   "impacto_unico": 0.0,
+   "custo_unico": 0.0,
+   "prazo_meses": 6,
+   "fontes": [
+    "oportunidades_mercado",
+    "margem_por_modelo"
+   ],
+   "hipoteses": [
+    "Demanda fora de Santa Maria não existe na planilha: o potencial vem da pesquisa externa (modo LLM)",
+    "Não somado ao plano: depende de novos contratos"
+   ],
+   "afirmacoes": {
+    "lucro_unid_rodoviario": 438714.0805555554
+   },
+   "pecas": [],
+   "dados": {
+    "modelos": [
+     {
+      "cod": "BUS-ELE-12M",
+      "nome": "Urbano Elétrico 12m (Zero Emissão)",
+      "lucro_unid": 496191.7169387755,
+      "unid_12m": 49.0,
+      "pct_receita": 0.34811790216399446,
+      "lead_max": 60.0
+     },
+     {
+      "cod": "BUS-ROD-14M",
+      "nome": "Rodoviário Premium DD 14m",
+      "lucro_unid": 438714.0805555554,
+      "unid_12m": 36.0,
+      "pct_receita": 0.17855632329822674,
+      "lead_max": 45.0
+     },
+     {
+      "cod": "BUS-URB-ART",
+      "nome": "Urbano Articulado 18m",
+      "lucro_unid": 313711.9813888888,
+      "unid_12m": 36.0,
+      "pct_receita": 0.152929991488668,
+      "lead_max": null
+     },
+     {
+      "cod": "BUS-URB-12M",
+      "nome": "Urbano Standard 12m",
+      "lucro_unid": 145620.31593220343,
+      "unid_12m": 59.0,
+      "pct_receita": 0.12182086235918681,
+      "lead_max": 45.0
+     },
+     {
+      "cod": "BUS-MIC-09M",
+      "nome": "Micro-ônibus Executivo 9m",
+      "lucro_unid": 108554.28635714285,
+      "unid_12m": 140.0,
+      "pct_receita": 0.19857492068992402,
+      "lead_max": null
+     }
+    ],
+    "prioridade": [
+     "BUS-ELE-12M",
+     "BUS-ROD-14M",
+     "BUS-URB-ART"
+    ]
+   },
+   "requer_validacao": "",
+   "status": "aprovada",
+   "motivos": []
+  },
+  {
+   "id": "MER-2",
+   "agente": "Mercado",
+   "titulo": "Fase 2: double-deck e novos segmentos",
+   "descricao": "Fora do horizonte financeiro: o cliente quer primeiro a empresa no verde.",
+   "tipo": "fase2",
+   "impacto_mensal": 0.0,
+   "impacto_unico": 0.0,
+   "custo_unico": 0.0,
+   "prazo_meses": 24,
+   "fontes": [
+    "respostas do cliente"
+   ],
+   "hipoteses": [],
+   "afirmacoes": {},
+   "pecas": [],
+   "dados": {
+    "itens": [
+     "Double-deck (cliente: só depois de a empresa estar no verde)",
+     "Novos segmentos que aproveitem a linha: circular, urbano, rodoviário",
+     "Venda de frotas sequenciais a prefeituras (hoje a venda é concentrada em Santa Maria)"
+    ]
+   },
+   "requer_validacao": "",
+   "status": "aprovada",
+   "motivos": []
+  }
+ ],
+ "pareceres": null
+}

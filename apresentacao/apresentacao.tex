@@ -1,0 +1,211 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\usepackage{fontspec}
+\usepackage[brazilian]{babel}
+\usepackage{booktabs,graphicx,tikz}
+\setmainfont{Noto Sans}
+\setsansfont{Noto Sans}
+\renewcommand{\familydefault}{\sfdefault}
+\graphicspath{{../figuras/}}
+
+% --- paleta: tinta, cinza e um único acento (o mesmo azul das figuras)
+\definecolor{ink}{HTML}{1B1F24}
+\definecolor{muted}{HTML}{6B7280}
+\definecolor{accent}{HTML}{1F5FA8}
+\definecolor{warn}{HTML}{C0392B}
+\setbeamercolor{normal text}{fg=ink,bg=white}
+\setbeamercolor{structure}{fg=accent}
+\setbeamercolor{itemize item}{fg=accent}
+\setbeamertemplate{itemize item}{\raisebox{.15ex}{\scriptsize$\bullet$}}
+\setbeamertemplate{navigation symbols}{}
+\setbeamersize{text margin left=10mm,text margin right=10mm}
+\setbeamerfont{frametitle}{size=\large,series=\bfseries}
+\setbeamertemplate{frametitle}{\vskip5mm\raggedright\color{ink}\usebeamerfont{frametitle}\insertframetitle\par\vskip2mm}
+\setbeamertemplate{footline}{\hfill{\scriptsize\color{muted}\insertframenumber\hspace{10mm}}\vskip4mm}
+
+% número grande + rótulo
+\newcommand{\stat}[3][accent]{\begin{minipage}[t]{.3\textwidth}\raggedright{\fontsize{26}{28}\selectfont\bfseries\color{#1}#2}\\[1mm]{\small\color{muted}#3}\end{minipage}}
+\newcommand{\fig}[2][.7]{\includegraphics[width=\linewidth,height=#1\textheight,keepaspectratio]{#2}}
+\newcommand{\nota}[1]{{\small\color{muted}#1}}
+
+\begin{document}
+
+% ---------- 1. capa
+\begin{frame}[plain]
+\vspace*{18mm}
+{\fontsize{22}{26}\selectfont\bfseries Caxias Heavy Industries:\\[1mm] como sair do vermelho\\ em 12 meses\par}
+\vspace{4mm}\color{accent}\rule{22mm}{1.2pt}\color{ink}\par\vspace{4mm}
+{\large Plano de reestruturação com sistema multiagentes}\par
+\vspace{14mm}
+{\small\color{muted} % TODO: nomes da equipe
+Equipe\\ IA Generativa, UFSM \;·\; Novembro de 2026}
+\end{frame}
+
+% ---------- 2. equipe
+\begin{frame}{Quem fez o quê}
+\vspace{2mm}
+\begin{tabular}{@{}p{.38\textwidth}p{.45\textwidth}@{}}
+\toprule
+\textbf{Papel} & \textbf{Integrante}\\
+\midrule
+Consultor, contato único com o cliente & % TODO
+\\[2mm]
+Scrum Master & % TODO
+\\[2mm]
+Engenharia de dados & % TODO
+\\[2mm]
+Desenvolvimento dos agentes & % TODO
+\\[2mm]
+Análise e validação & % TODO
+\\
+\bottomrule
+\end{tabular}
+\end{frame}
+
+% ---------- 3. diagnóstico geral
+\begin{frame}{A empresa tem pedidos, mas não tem folga}
+\vspace{3mm}
+\stat{273,9}{R\$ milhões: carteira de 12 meses (320 ônibus)}\hfill
+\stat{4,36}{R\$ milhões por mês: lucro bruto das entregas}\hfill
+\stat[warn]{3,77}{R\$ milhões por mês: dividendos do plano (corrente + atrasados em 24 meses)}
+\vspace{5mm}
+
+{\large O lucro bruto cobre os dividendos \textbf{1,16 vez}.} Com caixa zero, qualquer atraso vira rombo.
+
+\vspace{4mm}\nota{Dividendos de 12 meses: R\$ 33,3 mi, dos quais R\$ 22,5 mi exigíveis e R\$ 10,8 mi de ações ON suspensas.}
+\end{frame}
+
+% ---------- 4. margem
+\begin{frame}{Todos os modelos dão lucro; o elétrico dá o maior por ônibus}
+\begin{columns}[c]
+\column{.62\textwidth}\fig[.68]{02_margem_modelos.png}
+\column{.34\textwidth}
+Margem de 25,5\% (elétrico) a 32,3\% (rodoviário) no preço praticado.\\[3mm]
+Lucro por ônibus: de R\$ 109 mil (micro) a R\$ 496 mil (elétrico).
+\end{columns}
+\end{frame}
+
+% ---------- 5. pendentes
+\begin{frame}{27 ônibus pendentes seguram R\$ 28 mi}
+\begin{columns}[c]
+\column{.6\textwidth}\fig[.68]{03_carteira_pedidos.png}
+\column{.36\textwidth}
+{\fontsize{24}{26}\selectfont\bfseries\color{warn}27}\\[-1mm]{\small\color{muted}pedidos pendentes ou atrasados}\\[4mm]
+Prefeitura só paga na entrega.\\[2mm]
+Multa de R\$ 2,81 mi mais R\$ 28 mil por dia.
+\end{columns}
+\end{frame}
+
+% ---------- 6. capacidade
+\begin{frame}{No papel a linha dá conta; o gargalo está fora dela}
+\begin{columns}[c]
+\column{.64\textwidth}\fig[.68]{04_capacidade_linha.png}
+\column{.32\textwidth}
+89 ônibus/mês com 3 turnos; 59 com 2. O pico de pedidos é 46.\\[3mm]
+Os atrasos vêm de fornecedores e paradas de máquina, que a planilha não mede.
+\end{columns}
+\end{frame}
+
+% ---------- 7. refugo
+\begin{frame}{Refugo importa pouco no caixa}
+\begin{columns}[c]
+\column{.62\textwidth}\fig[.68]{05_refugo_etapas.png}
+\column{.34\textwidth}
+Etapas 20, 50 e 60 passam de 5\%.\\[3mm]
+Só 71\% dos ônibus passam sem retrabalho, mas o retrabalho é 4\% do tempo de ciclo.
+\end{columns}
+\end{frame}
+
+% ---------- 8. fornecedores
+\begin{frame}{O inversor chinês prende R\$ 3,9 mi no caminho}
+\begin{columns}[c]
+\column{.62\textwidth}\fig[.68]{06_leadtime_pecas.png}
+\column{.34\textwidth}
+Inversor: 60 dias, sem produtor nacional. Chicote Yazaki: não substituível.\\[3mm]
+Dólar +10\% custa R\$ 245 mil por mês.
+\end{columns}
+\end{frame}
+
+% ---------- 9. arquitetura
+\begin{frame}{Sete agentes, com um revisor que pode vetar}
+\begin{center}\fig[.78]{01_arquitetura.png}\end{center}
+\end{frame}
+
+% ---------- 10. revisor
+\begin{frame}{O Revisor recalcula e aplica as regras do cliente}
+\begin{columns}[T]
+\column{.48\textwidth}
+\textbf{Por que multiagentes}
+\begin{itemize}
+  \item Quatro domínios independentes
+  \item Dados externos do Banco Central
+  \item Contas feitas em Python, não pelo LLM
+\end{itemize}
+\column{.48\textwidth}
+\textbf{O que o Revisor impõe}
+\begin{itemize}
+  \item Horizonte de 12 meses
+  \item Rescisão CLT; aviso de 30 dias a fornecedor
+  \item Chicote e inversor ficam
+  \item Caixa zero
+\end{itemize}
+\end{columns}
+\vspace{3mm}
+\hrule\vspace{3mm}
+\textbf{\color{warn}Exemplo de veto:} reduzir o elétrico perde R\$ 12,2 mi de lucro para liberar R\$ 2,0 mi. Reprovado.
+\end{frame}
+
+% ---------- 11. plano
+\begin{frame}{11 propostas: 1 reprovada, 2 condicionais}
+\footnotesize
+\begin{tabular}{@{}l@{\hspace{3mm}}l@{\hspace{3mm}}r@{\hspace{3mm}}l@{}}
+\toprule
+ & \textbf{Proposta} & \textbf{Efeito} & \textbf{Parecer}\\
+\midrule
+FIN-1 & Dividendos: corrente em dia, atrasados em 24 meses & $-$R\$ 0,99 mi/mês & aprovada\\
+FIN-2 & Entregar os 27 pendentes & +R\$ 7,07 mi (único) & aprovada\\
+FIN-3 & Reduzir a produção do elétrico & & \color{warn}reprovada\\
+FIN-4 & Diretoria $-$20\% (parecer jurídico) & +R\$ 77 mil/mês & condicional\\
+OPE-1 & 2 turnos e ajuste do quadro & +R\$ 58 mil/mês & condicional\\
+OPE-2 & Manutenção nas etapas 20, 50 e 60 & +R\$ 2 mil/mês & aprovada\\
+SUP-1 & Comprar peças longas no pedido firme & +R\$ 421 mil (único) & aprovada\\
+SUP-2/3 & Cotar alternativas; elétrico sob pedido & não somado & aprovada\\
+MER-1/2 & Mix de maior lucro; double-deck na fase 2 & não somado & aprovada\\
+\bottomrule
+\end{tabular}
+\end{frame}
+
+% ---------- 12. resultado
+\begin{frame}{Com o plano, a cobertura sobe e o saldo fica positivo}
+\begin{columns}[c]
+\column{.64\textwidth}\fig[.68]{07_caixa_dividendos.png}
+\column{.32\textwidth}
+{\fontsize{18}{20}\selectfont\bfseries\color{accent}1,16x $\to$ 1,19x}\\[-1mm]{\small\color{muted}cobertura dos dividendos}\\[4mm]
+Saldo mínimo de R\$ 1,0 mi no mês 1.\\[1mm]
+Selic sobre os atrasados: R\$ 1,29 mi.\\[2mm]
+\nota{Saldo é proxy: lucro bruto menos dividendos.}
+\end{columns}
+\end{frame}
+
+% ---------- 13. limites
+\begin{frame}{O que ainda precisamos confirmar}
+\begin{columns}[T]
+\column{.48\textwidth}
+\textbf{Limitações}
+\begin{itemize}
+  \item O saldo não inclui outras despesas nem dívidas
+  \item Capacidade teórica, sem paradas de máquina
+  \item Operadores por estação, rescisão e multa são hipóteses
+  \item O modo com LLM ainda não foi executado
+\end{itemize}
+\column{.48\textwidth}
+\textbf{Próximos passos}
+\begin{itemize}
+  \item Juros e multa dos dividendos atrasados
+  \item Dias de atraso e custo do refugo
+  \item Cotar peças alternativas
+  \item Fase 2: double-deck e P\&D, depois do verde
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\end{document}

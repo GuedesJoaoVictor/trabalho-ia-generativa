@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.aux
+*.log
+*.fls
+*.fdb_latexmk
+*.out
+*.toc
+*.nav
+*.snm
+*.vrb
+*.lof
+*.lot
+*.bbl
+*.blg
+*.brf

@@ -1,0 +1,89 @@
+% Esqueleto do relatório (Fase III). Só estrutura: toda a redação é do grupo (regra 4.1 do enunciado).
+% Base: abnTeX2 (ABNT). CONFERIR contra o MDT UFSM vigente (margens, fonte, citações, referências).
+\documentclass[12pt,a4paper,oneside,brazil]{abntex2}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,graphicx,booktabs,indentfirst}
+\usepackage[brazilian,hyperpageref]{backref}
+\usepackage[alf]{abntex2cite}
+\graphicspath{{../figuras/}}
+
+\titulo{% TODO: título
+}
+\autor{% TODO: autores
+}
+\local{Santa Maria}
+\data{2026}
+\instituicao{Universidade Federal de Santa Maria}
+\preambulo{% TODO: natureza do trabalho, disciplina e professor
+}
+
+\begin{document}
+\imprimircapa
+\imprimirfolhaderosto*
+
+\begin{resumo}
+% TODO
+\end{resumo}
+
+\pdfbookmark[0]{\listfigurename}{lof}\listoffigures*\cleardoublepage
+\pdfbookmark[0]{\listtablename}{lot}\listoftables*\cleardoublepage
+\pdfbookmark[0]{\contentsname}{toc}\tableofcontents*\cleardoublepage
+
+\textual
+
+\chapter{Introdução}
+% TODO: empresa, problema central, justificativa
+
+\chapter{Embasamento teórico}
+\section{IA generativa e LLMs}
+% TODO
+\section{Sistemas de agente único e multiagentes}
+% TODO
+\section{Engenharia de prompt, uso de ferramentas e RAG}
+% TODO
+\section{Métodos de otimização e decisão}
+% TODO
+
+% Tabelas prontas em tabelas/*.tex (gerar_tabelas.py): \begin{table}\caption{..}\small\input{tabelas/propostas}\fonte{..}\end{table}
+\chapter{Aplicação prática}
+\section{Resultados da entrevista}
+% TODO: fase1-*.md, respostas-*.md
+\section{Arquitetura do sistema}
+% TODO: papel de cada agente, ferramentas, regras de validação
+\begin{figure}[htb]
+  \caption{% TODO
+  }
+  \centering\includegraphics[width=\textwidth]{01_arquitetura.png}
+  \fonte{% TODO
+  }
+\end{figure}
+
+\section{Análise dos dados}
+% TODO: margens, carteira, capacidade, refugo, fornecedores (figuras 02 a 06)
+\begin{figure}[htb]
+  \caption{% TODO
+  }
+  \centering\includegraphics[width=.8\textwidth]{02_margem_modelos.png}
+  \fonte{% TODO
+  }
+\end{figure}
+% Demais figuras: 03_carteira_pedidos, 04_capacidade_linha, 05_refugo_etapas, 06_leadtime_pecas
+
+\section{Soluções propostas e impacto}
+% TODO: plano-consolidado.md
+\begin{figure}[htb]
+  \caption{% TODO
+  }
+  \centering\includegraphics[width=\textwidth]{07_caixa_dividendos.png}
+  \fonte{% TODO
+  }
+\end{figure}
+
+\chapter{Conclusão}
+% TODO: síntese, limitações, recomendações
+
+\postextual
+\bibliography{referencias}
+
+\end{document}
