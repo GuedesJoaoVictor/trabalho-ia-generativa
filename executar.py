@@ -1,7 +1,8 @@
 """Roda o sistema de agentes e grava plano.json, plano-consolidado.md e as figuras.
 
 Uso:  .venv/bin/python executar.py          # modo determinístico (sem chave)
-      .venv/bin/python executar.py --llm    # + pareceres do Claude (ANTHROPIC_API_KEY; não testado)
+      .venv/bin/python executar.py --llm    # + pareceres via API (GEMINI_API_KEY ou ANTHROPIC_API_KEY)
+      .venv/bin/python executar.py --local  # + pareceres com modelo local (Ollama, MODELO_LOCAL=qwen3:4b)
 """
 import json
 import sys
@@ -55,7 +56,7 @@ def md(plano, pareceres=None):
 
 if __name__ == "__main__":
     plano = agentes.orquestrar()
-    pareceres = agentes.parecer_llm(plano) if "--llm" in sys.argv else None
+    pareceres = agentes.parecer_llm(plano, local="--local" in sys.argv) if ("--llm" in sys.argv or "--local" in sys.argv) else None
     figuras.gerar_todas(plano)
     open("plano-consolidado.md", "w", encoding="utf-8").write(md(plano, pareceres))
     json.dump(dict(consolidado=plano["consolidado"], externo=plano["externo"], propostas=[asdict(p) for p in plano["propostas"]],

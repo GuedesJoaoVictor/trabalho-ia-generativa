@@ -6,7 +6,9 @@ mesmas ferramentas (tool use) e escreve um parecer; o Revisor LLM critica o plan
 (sem chave no ambiente de desenvolvimento): testar antes de usar.
 """
 import functools
+import inspect
 import json
+import os
 from dataclasses import asdict, dataclass, field
 
 import ferramentas as F
@@ -284,17 +286,87 @@ ESPECIALISTAS = {
 def _como_tool(fn):
     import anthropic
 
-    @functools.wraps(fn)
-    def w(*a, **k):
-        return json.dumps(fn(*a, **k), ensure_ascii=False, default=str)
+    def w(**k):
+        return json.dumps(fn(**k), ensure_ascii=False, default=str)
 
-    w.__annotations__ = {**fn.__annotations__, "return": str}
-    return anthropic.beta_tool(w)
+    # schema montado à mão: o pydantic não enxerga anotações de wrapper no Python 3.14
+    tipo = {int: "integer", float: "number", bool: "boolean", str: "string"}
+    props, obrig = {}, []
+    for n, p in inspect.signature(fn).parameters.items():
+        t = p.annotation if p.annotation is not p.empty else (type(p.default) if p.default is not p.empty else float)
+        props[n] = {"type": tipo.get(t, "number")}
+        if p.default is p.empty:
+            obrig.append(n)
+    w.__name__ = fn.__name__
+    return anthropic.beta_tool(w, name=fn.__name__, description=(fn.__doc__ or fn.__name__).strip(),
+                               input_schema={"type": "object", "properties": props, "required": obrig})
 
 
-def parecer_llm(plano: dict) -> dict:
+MODELO_GEMINI = "gemini-flash-latest"
+
+
+def _parecer_gemini(plano: dict) -> dict:
+    """Mesmo desenho do modo Claude, com Gemini: function calling automático nas ferramentas de ferramentas.py,
+    Google Search para o Mercado e uma crítica do Revisor. Os números do plano continuam vindo do código."""
+    from google import genai
+    from google.genai import types
+    client = genai.Client(http_options=types.HttpOptions(retry_options=types.HttpRetryOptions(attempts=5)))
+    ger = lambda **kw: client.models.generate_content(model=MODELO_GEMINI, **kw).text or ""
+    out = {}
+    for nome, tools in ESPECIALISTAS.items():
+        out[nome] = ger(contents="Analise sua área com as ferramentas e liste as 3 recomendações mais relevantes, cada uma com o número e a ferramenta de origem.",
+                        config=types.GenerateContentConfig(system_instruction=f"Você é o agente {nome}. {CONTEXTO}", tools=list(tools)))
+    out["Mercado"] = ger(contents="Pesquise fontes públicas sobre demanda por ônibus urbanos, escolares/micro e elétricos em prefeituras do RS "
+                                  "e linhas de financiamento (ex.: BNDES) e liste oportunidades com a URL de cada fonte.",
+                         config=types.GenerateContentConfig(system_instruction=f"Você é o agente de Mercado. {CONTEXTO}", tools=[types.Tool(google_search=types.GoogleSearch())]))
+    plano_json = json.dumps([asdict(p) for p in plano["propostas"]], ensure_ascii=False, default=str)
+    out["Revisor"] = ger(contents=f"Critique este plano: contradições, números sem fonte, restrições do cliente violadas.\n{plano_json}",
+                         config=types.GenerateContentConfig(system_instruction=f"Você é o Revisor. {CONTEXTO}"))
+    return out
+
+
+MODELO_LOCAL = os.environ.get("MODELO_LOCAL", "qwen3:4b")
+
+
+def _parecer_local(plano: dict) -> dict:
+    """Mesmo desenho, com modelo local via Ollama (sem chave, sem internet): especialistas chamam as ferramentas,
+    o Revisor critica o plano. Sem busca na web: o agente de Mercado fica de fora (não inventa fonte)."""
+    import ollama
+
+    def ger(system, user, tools=()):
+        porNome = {f.__name__: f for f in tools}
+        msgs = [{"role": "system", "content": system}, {"role": "user", "content": user}]
+        for _ in range(8):
+            m = ollama.chat(model=MODELO_LOCAL, messages=msgs, tools=list(tools) or None, think=False,
+                            options={"num_ctx": 8192, "temperature": 0.2}).message
+            msgs.append(m)
+            if not m.tool_calls:
+                return m.content or ""
+            for tc in m.tool_calls:
+                try:
+                    res = json.dumps(porNome[tc.function.name](**tc.function.arguments), ensure_ascii=False, default=str)
+                except Exception as e:  # modelo pequeno erra argumentos: devolve o erro para ele corrigir
+                    res = f"erro: {e}"
+                msgs.append({"role": "tool", "tool_name": tc.function.name, "content": res[:6000]})  # cabe no contexto de 8k
+        return ""
+
+    out = {}
+    for nome, tools in ESPECIALISTAS.items():
+        out[nome] = ger(f"Você é o agente {nome}. {CONTEXTO}",
+                        "Analise sua área com as ferramentas e liste as 3 recomendações mais relevantes, cada uma com o número e a ferramenta de origem.", tools)
+    resumo = json.dumps([{k: getattr(p, k) for k in ("id", "titulo", "impacto_mensal", "impacto_unico", "custo_unico", "status", "motivos", "hipoteses")}
+                         for p in plano["propostas"]], ensure_ascii=False, default=str)
+    out["Revisor"] = ger(f"Você é o Revisor. {CONTEXTO}", f"Critique este plano: contradições, números sem fonte, restrições do cliente violadas.\n{resumo}")
+    return out
+
+
+def parecer_llm(plano: dict, local: bool = False) -> dict:
     """Cada especialista (Claude) chama suas ferramentas e escreve um parecer; o Revisor (Claude) critica o plano;
     o Mercado pesquisa na web (servidor de busca da API). Devolve textos; os números do plano continuam vindo do código."""
+    if local:
+        return _parecer_local(plano)
+    if os.environ.get("GEMINI_API_KEY"):
+        return _parecer_gemini(plano)
     import anthropic
     client = anthropic.Anthropic()
     out = {}
