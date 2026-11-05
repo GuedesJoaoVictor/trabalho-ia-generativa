@@ -22,7 +22,7 @@
 \imprimirfolhaderosto*
 
 \begin{resumo}
-Este trabalho apresenta o diagnóstico e um plano de reestruturação para a Caxias Heavy Industries, fabricante de carrocerias de ônibus em crise financeira, operacional e de qualidade. A partir da análise de sete abas de dados estruturados fornecidas pela empresa e de entrevistas realizadas pelo Consultor com o cliente, verificou-se que a empresa tem uma boa carteira de pedidos, mas cobre mal o passivo de dividendos e atrasa entregas, o que gera multa e adia a receita, já que as prefeituras só pagam na entrega. Foi desenvolvido um sistema multiagentes composto por Orquestrador, Financeiro, Operações, Suprimentos, Mercado/Coleta Externa e Revisor, no qual todas as contas são recalculadas por funções em Python, com dados externos do Banco Central via API SGS, e validação independente pelo Revisor com base nas regras do cliente. O plano consolidado, em horizonte de 12 meses, propõe 11 ações, das quais 8 aprovadas, 2 condicionais e 1 reprovada pelo Revisor, elevando a cobertura dos dividendos de 1,16 para 1,19 vezes e mantendo saldo mínimo positivo no proxy de caixa operacional. O trabalho também discute as limitações das hipóteses adotadas e traz recomendações para a implementação.
+Este trabalho apresenta o diagnóstico e um plano de reestruturação para a Caxias Heavy Industries, fabricante de carrocerias de ônibus em crise financeira, operacional e de qualidade. A partir da análise de sete abas de dados estruturados fornecidas pela empresa e de entrevistas realizadas pelo Consultor com o cliente, verificou-se que a empresa tem uma boa carteira de pedidos, mas cobre mal o passivo de dividendos e atrasa entregas, o que gera multa e adia a receita, já que as prefeituras só pagam na entrega. Foi desenvolvido um sistema multiagentes composto por Orquestrador, Financeiro, Operações, Suprimentos, Mercado/Coleta Externa e Revisor, no qual todas as contas são recalculadas por funções em Python, com dados externos do Banco Central via API SGS, e validação independente pelo Revisor com base nas regras do cliente. O sistema também foi executado no modo LLM com a API Gemini (modelo gemini-3.1-flash-lite): os agentes chamaram as mesmas ferramentas por function calling, e o agente de Mercado encontrou, por busca na web, uma consulta de preços de Porto Alegre para 100 ônibus elétricos. Os pareceres do LLM servem de apoio e não alteram os números do plano. O plano consolidado, em horizonte de 12 meses, propõe 11 ações, das quais 8 aprovadas, 2 condicionais e 1 reprovada pelo Revisor, elevando a cobertura dos dividendos de 1,16 para 1,19 vezes e mantendo saldo mínimo positivo no proxy de caixa operacional. O trabalho também discute as limitações das hipóteses adotadas e traz recomendações para a implementação.
 
 \begin{palavras-chave}
 Sistemas multiagentes. Large Language Models. Tool use. Reestruturação empresarial. Otimização operacional.
@@ -147,14 +147,14 @@ Orquestrador & Distribui tarefas, resolve conflitos por priorizar caixa, monta o
 Financeiro & Margem, passivo de dividendos, fluxo mensal, risco de bloqueio; vetor de propostas sem caixa & \texttt{margem\_por\_modelo}, \texttt{passivo\_dividendos}, \texttt{plano\_dividendos} \\
 Operações & Capacidade, refugo, excesso de operadores, custo 24h, absenteísmo & \texttt{capacidade\_linha}, \texttt{qualidade\_linha}, \texttt{cenario\_turnos} \\
 Suprimentos & Atrasos por fornecedor, custo de BOM, alternativas, peças críticas & \texttt{leadtime\_criticos}, \texttt{sensibilidade\_cambio} \\
-Mercado/Coleta Externa & Novos clientes, segmentos, benchmarks; dados macroeconômicos & API BCB SGS (Selic, dólar, euro, IPCA); pesquisa externa no modo LLM \\
-Revisor & Valida números, restrições e coerência; devolve com motivo se reprovar & Recálculo independente direto da planilha \\
+Mercado/Coleta Externa & Novos clientes, segmentos, benchmarks; dados macroeconômicos & API BCB SGS (Selic, dólar, euro, IPCA); no modo LLM, \texttt{buscar\_web} e \texttt{ler\_pagina} \\
+Revisor & Valida números, restrições e coerência; devolve com motivo se reprovar & Recálculo independente direto da planilha; no modo LLM, também uma crítica em texto \\
 \bottomrule
 \end{tabular}
 \fonte{Elaboração do grupo com base em \texttt{arquitetura-agentes.md}.}
 \end{table}
 
-As ferramentas são funções Python puras sobre a planilha e, no caso do Coleta Externa, sobre a API do Banco Central. Toda conta é feita por função, nunca pelo LLM. O modo determinístico, que gerou todos os resultados deste relatório, usa agentes como funções Python que chamam as ferramentas e devolvem propostas com número. O modo LLM está implementado, com especialistas Claude/Gemini/local via tool use e pesquisa web para o Mercado, mas não foi executado no desenvolvimento por ausência de chave de API; portanto nenhum número do plano depende de saída de LLM.
+As ferramentas são funções Python puras sobre a planilha e, no caso do Coleta Externa, sobre a API do Banco Central. Toda conta é feita por função, nunca pelo LLM. O sistema tem dois modos. No modo determinístico, que gera os números, as propostas e o parecer do Revisor, os agentes são funções Python que chamam as ferramentas e devolvem propostas com número. No modo LLM (\texttt{executar.py --llm}), cada agente recebe as mesmas ferramentas e escreve um parecer em texto. Esse modo foi executado com a API Gemini, conforme a Seção~\ref{sec:llm}. Os pareceres são anexados ao plano, mas não mudam números nem o status das propostas; portanto nenhum número do plano depende de saída de LLM.
 
 Dados externos consultados em 03/11/2026 via API SGS do Banco Central \cite{bcb2026sgs}: Selic meta 13,75\% a.a.; dólar R\$ 5,4935; euro R\$ 6,15; IPCA do mês 0,82\%. A correção Selic dos dividendos atrasados somou R\$ 1.294.643 sobre principal de R\$ 22,5 milhões, com séries 4390 (Selic acumulada), 432 (Selic meta), 1 e 21619 (câmbio) e 433 (IPCA), com cópia em \texttt{dados\_externos.json}. A Selic entrou como índice de referência porque o cliente não informou os juros e a multa reais.
 
@@ -168,6 +168,8 @@ As regras de validação aplicadas pelo Revisor são:
 \item Nenhuma proposta pode piorar o caixa dos primeiros meses sem apontar fonte de financiamento.
 \item Multa por atraso (10\% + 0,1\%/dia) entra como custo de cenários que atrasem entregas.
 \item Propostas com economia e custo de implantação informam prazo de retorno.
+\item No modo LLM, toda URL citada pelo agente de Mercado precisa ter vindo de uma chamada de ferramenta (\texttt{buscar\_web} ou \texttt{ler\_pagina}); URL sem origem é sinalizada no parecer.
+\item Parecer de LLM não muda o status de proposta: quem aprova, condiciona ou reprova é o Revisor determinístico.
 \end{enumerate}
 
 \section{Análise dos dados do cenário}
@@ -320,10 +322,47 @@ O resultado consolidado, em proxy de caixa operacional definido como lucro bruto
 
 Do ponto de vista qualitativo, o plano amarra as compras à carteira firme, o que reduz os atrasos por lead time. Ataca o refugo nas etapas críticas sem contar com ele para o caixa e formaliza um acordo de dividendos dentro da ordem do cliente. E mantém o elétrico: a margem percentual é a menor, mas o lucro por unidade é o maior.
 
+\section{Execução com LLM pela API Gemini}
+\label{sec:llm}
+
+Na primeira versão deste relatório, o modo LLM não havia sido executado por falta de chave de API. Nesta versão, o sistema foi executado com \texttt{executar.py --llm} em 05/11/2026, usando uma chave gratuita da API Gemini do Google (variável \texttt{GEMINI\_API\_KEY}) e o modelo \texttt{gemini-3.1-flash-lite} (variável \texttt{MODELO\_GEMINI}), um modelo leve da família Gemini. A chamada usa o SDK \texttt{google-genai} com function calling automático \cite{google2026gemini}: as funções de \texttt{ferramentas.py} são passadas ao modelo como ferramentas, o modelo decide quais chamar, o SDK executa a função em Python e devolve o resultado ao modelo, que então redige o parecer. Todos os agentes recebem o mesmo contexto do cliente (caixa zero, 12 meses, prefeitura paga na entrega, Yazaki e inversor fixos, aviso de 30 dias, CLT, double-deck depois) e a instrução de usar somente números devolvidos pelas ferramentas e marcar o restante como hipótese. No modo LLM, Coleta Externa e Mercado rodam como agentes separados: o primeiro com as ferramentas do Banco Central, o segundo com a busca na web.
+
+O desenho original previa, para o agente de Mercado, a busca do Google integrada à API. Com a chave gratuita, essa busca retornou erro 429 (sem cota), e por isso foram criadas duas ferramentas próprias em \texttt{ferramentas.py}: \texttt{buscar\_web}, que consulta o DuckDuckGo e devolve título, URL e trecho de até 8 resultados, e \texttt{ler\_pagina}, que baixa uma página e devolve até 6.000 caracteres do texto visível. As duas registram a data da consulta. Ao final, o sistema compara as URLs citadas no parecer do Mercado com as URLs que as ferramentas devolveram e sinaliza as que não vieram de nenhuma chamada; nesta execução, nenhuma URL foi sinalizada.
+
+Para que os números do relatório não mudassem, a execução reutilizou a consulta ao Banco Central de 03/11/2026 gravada em \texttt{dados\_externos.json} (variável \texttt{USAR\_CACHE\_BCB}). Comparando o \texttt{plano.json} antes e depois da execução, a única diferença é o campo de pareceres: carteira, margens, propostas, pareceres do Revisor e projeção de caixa são os mesmos das seções anteriores. Os pareceres completos estão em \texttt{plano-consolidado.md}, e a Tabela~\ref{tab:llm} resume cada um.
+
+\begin{table}[htb]
+\caption{Pareceres do modo LLM (gemini-3.1-flash-lite, 05/11/2026) e avaliação do grupo}
+\label{tab:llm}
+\centering\scriptsize
+\begin{tabular}{@{}p{.13\textwidth}p{.40\textwidth}p{.41\textwidth}@{}}
+\toprule
+\textbf{Agente} & \textbf{O que recomendou} & \textbf{Avaliação do grupo} \\
+\midrule
+Financeiro & Entregar os 27 pendentes (R\$ 28,07 milhões parados, multa fixa de R\$ 2,81 milhões); focar no rodoviário, de maior margem (32,3\%); somar ao dividendo corrente de R\$ 2,775 milhões a amortização dos atrasados. & Números corretos. A escolha do rodoviário usa margem percentual; por lucro por ônibus o elétrico rende mais (R\$ 496 mil contra R\$ 439 mil), critério usado em FIN-3 e MER-1. \\
+\addlinespace
+Operações & Atacar a pintura (etapa 30), que limita a linha a 88,7 ônibus/mês; reduzir o refugo de 8,9\% da elétrica (0,49 h por veículo); combater o absenteísmo operacional de 5,5\% (608 faltas). & Números corretos. Com pico de 46 ônibus, a pintura não é gargalo efetivo. Disse que o absenteísmo eleva a folha operacional a R\$ 502 mil, mas esse é o custo total do nível. \\
+\addlinespace
+Suprimentos & Entregar os pendentes; produzir elétrico só contra pedido; hedge cambial, já que dólar +10\% custa R\$ 244.662/mês. & Coincide com FIN-2 e SUP-3. Tratou o gasto mensal com inversores (R\$ 1,96 milhão) como capital parado; o capital em trânsito é R\$ 3,92 milhões. Hedge sem custo calculado é hipótese. \\
+\addlinespace
+Coleta Externa & Com dólar a R\$ 5,4935, Selic de 13,75\% e IPCA de 0,82\%: reajuste cambial nos contratos com prefeituras e antecipação de recebíveis. & Cotações corretas. Reajuste cambial em contrato público e antecipação de recebíveis são hipóteses fora dos dados do cliente e não entram no plano. \\
+\addlinespace
+Mercado & Projeto E-BUS POA (100 elétricos, crédito de até R\$ 447,7 milhões do Fundo Clima/BNDES) e linha BNDES de eletrificação de frota. & As duas URLs vieram das ferramentas. Chamou de licitação o que a página descreve como consulta de preços, que ``não é uma licitação nem uma promessa de contratação''. \\
+\addlinespace
+Revisor (LLM) & Rescisão de OPE-1 sem fonte com caixa zero; descasamento entre receita na entrega e dividendo mensal; questionou a origem da multa. & OPE-1 coincide com o Revisor determinístico (condicional). A multa foi informada pelo cliente, mas a regra não estava no contexto do LLM. Pagar dividendos só após receber contraria a condição do cliente de manter o corrente em dia. \\
+\bottomrule
+\end{tabular}
+\fonte{Pareceres em \texttt{plano-consolidado.md}; valores conferidos com as ferramentas de \texttt{ferramentas.py}.}
+\end{table}
+
+O resultado mais útil veio do agente de Mercado, que preencheu uma lacuna da primeira versão: não havia dado de demanda fora de Santa Maria. A página lida pelo agente, publicada pela Prefeitura de Porto Alegre em 05/11/2026 \cite{poa2026ebus}, anuncia os editais de Chamamento Público Consulta de Preços 001 e 002/2026 do Projeto E-BUS POA, que formam o preço de referência para a compra de 100 ônibus elétricos e da infraestrutura de recarga. O financiamento é um contrato com o BNDES de até R\$ 447,7 milhões do Fundo Clima, e as propostas podem ser enviadas até 25/11/2026. A página traz três condições relevantes para a empresa: os ônibus devem ser novos, de fabricação nacional e credenciados no Finame do BNDES; os tipos pedidos são padron e articulado; e fabricantes de carroceria e consórcios podem participar. Como o inversor do elétrico é importado da China e custa R\$ 480 mil por unidade, a empresa precisa confirmar o credenciamento Finame antes de cotar e, com caixa zero, só consegue atender com pagamento do inversor na entrega (SUP-3). Por ser consulta de preços, e não contrato, a oportunidade não foi somada ao plano.
+
+A execução confirmou o desenho adotado. Quando o número vinha de uma ferramenta, o modelo copiou o valor correto; os erros apareceram na interpretação (chamar gasto mensal de capital parado, consulta de preços de licitação, escolher modelo por margem percentual) e quando faltou contexto, como no caso da multa. Além disso, os textos não são reproduzíveis: uma nova execução pode gerar pareceres diferentes, ao contrário dos números do plano. Por isso os pareceres foram mantidos como apoio à decisão, e o status das propostas continua definido pelo Revisor determinístico.
+
 \chapter{Conclusão}
 \section{Síntese dos resultados}
 
-O sistema multiagentes se mostrou adequado ao problema: separou domínios independentes, validou as propostas por fora e rejeitou uma alternativa que parecia aliviar o caixa, mas destruía valor. O diagnóstico é que a empresa não tem problema de demanda e sim de conversão da demanda em caixa, já que o pedido só vira receita na entrega e a entrega atrasada gera multa. O plano eleva a cobertura dos dividendos e mantém o saldo proxy positivo desde o primeiro mês, ao priorizar os pendentes e comprar só contra pedido firme.
+O sistema multiagentes se mostrou adequado ao problema: separou domínios independentes, validou as propostas por fora e rejeitou uma alternativa que parecia aliviar o caixa, mas destruía valor. O diagnóstico é que a empresa não tem problema de demanda e sim de conversão da demanda em caixa, já que o pedido só vira receita na entrega e a entrega atrasada gera multa. O plano eleva a cobertura dos dividendos e mantém o saldo proxy positivo desde o primeiro mês, ao priorizar os pendentes e comprar só contra pedido firme. A execução com a API Gemini mostrou o mesmo padrão: com ferramentas, o modelo reproduziu os números corretos e trouxe uma oportunidade externa verificável, mas errou interpretações, o que justifica manter o LLM como opinião e o cálculo e a aprovação em código.
 
 \section{Limitações do projeto}
 
@@ -335,7 +374,8 @@ O sistema multiagentes se mostrou adequado ao problema: separou domínios indepe
 \item Selic adotada como índice de referência; juros e multa reais dos dividendos não informados.
 \item Dividendos ON suspensos de R\$ 10,8 milhões ficaram fora da quitação, a confirmar.
 \item Custo direto e BOM incompletos: BOM cobre 3 de 5 modelos e chassi não aparece nela.
-\item Modo LLM nunca executado; resultados são determinísticos. Pesquisa de mercado externa depende do modo LLM e não há dado de mercado no plano.
+\item Os pareceres do modo LLM vêm de uma única execução com um modelo leve (gemini-3.1-flash-lite) e contêm erros de interpretação (Seção~\ref{sec:llm}); uma nova execução pode gerar textos diferentes. Por isso não alteram números nem status das propostas.
+\item A busca na web depende de raspagem do DuckDuckGo, que pode mudar de formato ou bloquear acessos. A oportunidade E-BUS POA não está somada ao plano.
 \item Double-deck e P\&D ficaram para fase 2 por decisão do cliente.
 \end{itemize}
 
@@ -347,7 +387,8 @@ O sistema multiagentes se mostrou adequado ao problema: separou domínios indepe
 \item Cotar fornecedores alternativos para ar-condicionado e portas e negociar condição de pagamento do inversor CATL na entrega.
 \item Validar escala real de turnos e pessoas por estação antes de qualquer desligamento; priorizar realocação para manutenção e qualidade.
 \item Obter parecer jurídico sobre redução de remuneração da diretoria e vínculo funcional.
-\item Executar modo LLM com chave de API e busca web para mapear demanda fora de Santa Maria e editais, sem alterar números determinísticos até nova validação.
+\item Avaliar a consulta de preços do E-BUS POA: conferir se o elétrico atende às especificações e obtém credenciamento Finame com inversor importado, e enviar cotação até 25/11/2026, sem contar essa receita no plano antes de haver contrato.
+\item Repetir o modo LLM com um modelo maior e com a regra da multa no contexto do Revisor LLM, comparando os pareceres com os desta execução.
 \item Após estabilização de 12 meses, planejar fase 2 para double-deck e novos segmentos, com orçamento próprio de P\&D.
 \end{enumerate}
 

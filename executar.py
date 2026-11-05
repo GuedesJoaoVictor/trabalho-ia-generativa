@@ -3,6 +3,8 @@
 Uso:  .venv/bin/python executar.py          # modo determinístico (sem chave)
       .venv/bin/python executar.py --llm    # + pareceres via API (GEMINI_API_KEY ou ANTHROPIC_API_KEY)
       .venv/bin/python executar.py --local  # + pareceres com modelo local (Ollama, MODELO_LOCAL=qwen3:4b)
+      .venv/bin/python executar.py --agente=Mercado   # só esse agente LLM (repetível); mantém os pareceres anteriores
+      USAR_CACHE_BCB=1 ...                  # usa a consulta ao Banco Central já gravada (números do relatório)
 """
 import json
 import sys
@@ -48,7 +50,7 @@ def md(plano, pareceres=None):
           "| Mês | Lucro bruto base | Melhorias | Pontual | Dividendos | Saldo acumulado |", "|---|---|---|---|---|---|"]
     L += [f"| {l['mes']} | {r(l['base'])} | {r(l['melhorias'])} | {r(l['unico'])} | {r(l['saida'])} | {r(l['saldo_acumulado'])} |" for l in c["projecao"]]
     if pareceres:
-        L += ["", "## Pareceres dos agentes Claude (modo LLM)", ""]
+        L += ["", "## Pareceres dos agentes (modo LLM)", ""]
         for k, v in pareceres.items():
             L += [f"### {k}", "", v, ""]
     return "\n".join(L) + "\n"
@@ -56,7 +58,11 @@ def md(plano, pareceres=None):
 
 if __name__ == "__main__":
     plano = agentes.orquestrar()
-    pareceres = agentes.parecer_llm(plano, local="--local" in sys.argv) if ("--llm" in sys.argv or "--local" in sys.argv) else None
+    so = [a.split("=", 1)[1] for a in sys.argv if a.startswith("--agente=")] or None
+    llm = so or "--llm" in sys.argv or "--local" in sys.argv
+    pareceres = agentes.parecer_llm(plano, local="--local" in sys.argv, so=so) if llm else None
+    if so:  # junta com os pareceres da rodada anterior, trocando só os agentes pedidos
+        pareceres = {**(json.load(open("plano.json", encoding="utf-8")).get("pareceres") or {}), **pareceres}
     figuras.gerar_todas(plano)
     open("plano-consolidado.md", "w", encoding="utf-8").write(md(plano, pareceres))
     json.dump(dict(consolidado=plano["consolidado"], externo=plano["externo"], propostas=[asdict(p) for p in plano["propostas"]],

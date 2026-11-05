@@ -3,8 +3,12 @@
 Todo número do plano nasce aqui, nunca do LLM. Cada função devolve dict/list serializável em JSON.
 As premissas abaixo são os 'botões de calibração': o que não veio da planilha nem do cliente.
 """
+import html
 import json
 import math
+import os
+import re
+import subprocess
 import urllib.request
 from datetime import date
 from functools import cache
@@ -277,6 +281,8 @@ def dados_externos() -> dict:
     """Séries do Banco Central (SGS): Selic meta, Selic acumulada no mês, dólar e euro (venda), IPCA mensal.
     Guarda cópia em dados_externos.json com a data da consulta; sem rede, usa a cópia."""
     series = {"selic_meta_aa": 432, "selic_acum_mes": 4390, "usd_brl": 1, "eur_brl": 21619, "ipca_mes": 433}
+    if os.environ.get("USAR_CACHE_BCB"):  # reproduz a última consulta gravada (a citada no relatório)
+        return json.loads(CACHE_BCB.read_text())
     try:
         out = dict(consultado_em=date.today().isoformat(), fonte="https://api.bcb.gov.br/dados/serie/bcdata.sgs.<serie>/dados",
                    series={k: dict(serie=n, dados=_bcb(n, "01/10/2025", "31/12/2026")) for k, n in series.items()})
@@ -284,6 +290,40 @@ def dados_externos() -> dict:
         return out
     except OSError:
         return json.loads(CACHE_BCB.read_text())  # sem rede: usa a última consulta
+
+
+def _baixar(url: str, form: dict | None = None) -> str:
+    # ponytail: curl em vez de urllib, porque o Python.org do macOS não usa os certificados do sistema
+    cmd = ["curl", "-sL", "-m", "20", "-A", "Mozilla/5.0", url]
+    for k, v in (form or {}).items():
+        cmd += ["--data-urlencode", f"{k}={v}"]
+    return subprocess.run(cmd, capture_output=True, text=True, errors="replace", timeout=30).stdout
+
+
+def _texto(h: str) -> str:
+    h = re.sub(r"(?is)<(script|style)\b.*?</\1>", " ", h)
+    return re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", h))).strip()
+
+
+def buscar_web(consulta: str) -> dict:
+    """Busca na web (DuckDuckGo) e devolve até 8 resultados com título, URL e trecho, mais a data da consulta.
+
+    Args:
+        consulta: termos da busca, em português.
+    """
+    pagina = _baixar("https://html.duckduckgo.com/html/", {"q": consulta, "kl": "br-pt"})
+    achados = re.findall(r'class="result__a" href="([^"]+)"[^>]*>(.*?)</a>.*?class="result__snippet"[^>]*>(.*?)</a>', pagina, re.S)
+    return dict(consulta=consulta, consultado_em=date.today().isoformat(),
+                resultados=[dict(titulo=_texto(t), url=html.unescape(u), trecho=_texto(s)) for u, t, s in achados[:8]])
+
+
+def ler_pagina(url: str) -> dict:
+    """Baixa uma página da web e devolve o texto visível (até 6000 caracteres), com a URL e a data da consulta.
+
+    Args:
+        url: endereço completo da página, de preferência um devolvido por buscar_web.
+    """
+    return dict(url=url, consultado_em=date.today().isoformat(), texto=_texto(_baixar(url))[:6000])
 
 
 def cotacoes_bcb() -> dict:

@@ -37,15 +37,15 @@ def arquitetura():
 
     caixa(0.3, 7.0, 3.2, 0.7, "Planilha do cliente (.xlsx)\n7 abas", CINZA)
     caixa(3.9, 7.0, 3.2, 0.7, "Entrevista com o cliente\n(restrições e prioridades)", CINZA)
-    caixa(7.5, 7.0, 3.2, 0.7, "Dados externos\nAPI do Banco Central", CINZA)
+    caixa(7.5, 7.0, 3.2, 0.7, "Dados externos\nAPI do Banco Central · busca na web", CINZA)
     caixa(3.3, 5.7, 4.4, 0.8, "Orquestrador\nplaneja, distribui, consolida o plano", AZUL)
     nomes = ["Coleta\nExterna", "Financeiro", "Operações", "Suprimentos", "Mercado"]
     xs = [0.3, 2.5, 4.7, 6.9, 9.1]
     for x, n in zip(xs, nomes):
         caixa(x, 3.9, 1.7, 0.9, n, LARANJA)
         seta(5.5, 5.7, x + 0.85, 4.8)
-    caixa(0.3, 2.45, 10.4, 0.8, "Ferramentas (tool use): cálculo em Python sobre a planilha · margem · capacidade · dividendos · "
-          "multa · lead time · câmbio · Selic", "#4a4f57")
+    caixa(0.3, 2.45, 10.4, 0.8, "Ferramentas (tool use): cálculo em Python sobre a planilha · margem · capacidade · dividendos\n"
+          "multa · lead time · câmbio · Selic · busca na web", "#4a4f57")
     for x in xs:
         seta(x + 0.85, 3.9, x + 0.85, 3.25, True)
     seta(1.9, 7.0, 3.9, 6.5)

@@ -62,6 +62,29 @@ Análise e validação & Diogo e Novak
 \end{tabular}
 \end{frame}
 
+% ---------- entrevista
+\begin{frame}{O que o cliente nos disse}
+\vspace{2mm}
+\begin{columns}[T]
+\column{.48\textwidth}
+\textbf{Objetivo e prazo}
+\begin{itemize}
+  \item Prioridade: pagar os dividendos e afastar o bloqueio pela B3
+  \item 12 meses; atrasados em 24 se o corrente estiver em dia
+  \item Caixa zero: o plano tem de se pagar
+  \item Carta branca, inclusive para demitir (CLT)
+\end{itemize}
+\column{.48\textwidth}
+\textbf{Restrições}
+\begin{itemize}
+  \item Chicote Yazaki e inversor chinês não se trocam
+  \item Trocar outro fornecedor: aviso de 30 dias
+  \item Prefeitura só paga na entrega; multa de 10\% + 0,1\% ao dia
+  \item Double-deck e P\&D só depois do verde
+\end{itemize}
+\end{columns}
+\end{frame}
+
 % ---------- 3. diagnóstico geral
 \begin{frame}{A empresa tem pedidos, mas não tem folga}
 \vspace{3mm}
@@ -138,7 +161,7 @@ Dólar +10\% custa R\$ 245 mil por mês.
 \textbf{Por que multiagentes}
 \begin{itemize}
   \item Quatro domínios independentes
-  \item Dados externos do Banco Central
+  \item Dados externos: Banco Central e busca na web
   \item Contas feitas em Python, não pelo LLM
 \end{itemize}
 \column{.48\textwidth}
@@ -152,17 +175,68 @@ Dólar +10\% custa R\$ 245 mil por mês.
 \end{columns}
 \vspace{3mm}
 \hrule\vspace{3mm}
-\textbf{\color{warn}Exemplo de veto:} reduzir o elétrico perde R\$ 12,2 mi de lucro para liberar R\$ 2,0 mi. Reprovado.
+\textbf{\color{warn}Exemplo de veto:} reduzir o elétrico perde R\$~12,2 mi de lucro para liberar R\$~2,0 mi. Reprovado.
+\end{frame}
+
+% ---------- LLM: como rodou
+\begin{frame}{Rodamos os agentes com LLM pela API Gemini}
+\small
+\begin{columns}[T]
+\column{.48\textwidth}
+\textbf{Como rodou}
+\begin{itemize}
+  \item \texttt{executar.py --llm}, chave gratuita, modelo \texttt{gemini-3.1-flash-lite}, 05/11/2026
+  \item \textit{Function calling}: o modelo escolhe a ferramenta, o Python calcula, o modelo redige o parecer
+  \item Mesmo contexto do cliente para todos: use só números das ferramentas
+\end{itemize}
+\column{.48\textwidth}
+\textbf{Busca na web própria}
+\begin{itemize}
+  \item A busca do Google na API deu erro 429 (sem cota na chave gratuita)
+  \item Criamos \texttt{buscar\_web} (DuckDuckGo) e \texttt{ler\_pagina}
+  \item URL citada que não veio das ferramentas é sinalizada: nenhuma foi
+\end{itemize}
+\end{columns}
+\vspace{2mm}
+\hrule\vspace{2mm}
+\textbf{Os números do plano não mudaram:} mesma consulta ao Banco Central (03/11) e, no \texttt{plano.json}, só os pareceres são novos.
+\end{frame}
+
+% ---------- LLM: o que acertou e errou
+\begin{frame}{O LLM acerta os números e erra a interpretação}
+\small
+\begin{columns}[T]
+\column{.48\textwidth}
+\textbf{O que acertou}
+\begin{itemize}
+  \item Copiou os números das ferramentas: R\$~28,07 mi nos pendentes, Selic 13,75\%, refugo de 8,9\%
+  \item Revisor LLM também condicionou a rescisão da OPE-1
+  \item Mercado achou uma oportunidade real fora de Santa Maria
+\end{itemize}
+\column{.48\textwidth}
+\textbf{O que errou}
+\begin{itemize}
+  \item Suprimentos: R\$~1,96 mi/mês de inversor como capital parado (são R\$~3,92 mi)
+  \item Financeiro escolheu o rodoviário pela margem \%; por ônibus o elétrico lucra mais
+  \item Mercado chamou de licitação uma consulta de preços
+  \item Revisor LLM duvidou da multa: a regra não estava no contexto dele
+\end{itemize}
+\end{columns}
+\vspace{2mm}
+\hrule\vspace{2mm}
+O LLM opina; quem aprova é o Revisor determinístico.
+
+\nota{Pareceres completos em plano-consolidado.md; avaliação no relatório, Tabela 8.}
 \end{frame}
 
 % ---------- 11. plano
 \begin{frame}{11 propostas: 1 reprovada, 2 condicionais}
 \footnotesize
-\begin{tabular}{@{}l@{\hspace{3mm}}l@{\hspace{3mm}}r@{\hspace{3mm}}l@{}}
+\begin{tabular}{@{}l@{\hspace{2mm}}l@{\hspace{2mm}}r@{\hspace{2mm}}l@{}}
 \toprule
  & \textbf{Proposta} & \textbf{Efeito} & \textbf{Parecer}\\
 \midrule
-FIN-1 & Dividendos: corrente em dia, atrasados em 24 meses & $-$R\$ 0,99 mi/mês & aprovada\\
+FIN-1 & Dividendos em dia; atrasados em 24 meses & $-$R\$ 0,99 mi/mês & aprovada\\
 FIN-2 & Entregar os 27 pendentes & +R\$ 7,07 mi (único) & aprovada\\
 FIN-3 & Reduzir a produção do elétrico & & \color{warn}reprovada\\
 FIN-4 & Diretoria $-$20\% (parecer jurídico) & +R\$ 77 mil/mês & condicional\\
@@ -187,6 +261,22 @@ Selic sobre os atrasados: R\$ 1,29 mi.\\[2mm]
 \end{columns}
 \end{frame}
 
+% ---------- mercado
+\begin{frame}{Fora do plano: o Mercado achou uma consulta de preços no RS}
+\vspace{3mm}
+\stat{100}{elétricos, padron e articulado: E-BUS POA}\hfill
+\stat{447,7}{R\$ milhões de crédito do Fundo Clima/BNDES}\hfill
+\stat[warn]{25/11}{prazo para enviar cotação}
+\vspace{4mm}
+
+\textbf{Antes de entrar:} a consulta pede ônibus de fabricação nacional credenciado no Finame, e o nosso inversor é chinês. Cada elétrico leva um inversor de R\$~480 mil: com caixa zero, só cabe com pagamento na entrega (SUP-3).
+
+\vspace{3mm}
+Fabricantes de carroceria podem cotar. Mas não é licitação nem promessa de contratação: forma o preço de referência. Por isso não entra no plano.
+
+\vspace{4mm}\nota{Fonte: prefeitura.poa.br (05/11/2026), lida pelo Mercado com \texttt{ler\_pagina}.}
+\end{frame}
+
 % ---------- 13. limites
 \begin{frame}{O que ainda precisamos confirmar}
 \begin{columns}[T]
@@ -196,14 +286,15 @@ Selic sobre os atrasados: R\$ 1,29 mi.\\[2mm]
   \item O saldo não inclui outras despesas nem dívidas
   \item Capacidade teórica, sem paradas de máquina
   \item Operadores por estação, rescisão e multa são hipóteses
-  \item O modo com LLM ainda não foi executado
+  \item Pareceres LLM: uma execução, modelo leve, com erros; são apoio, não decisão
 \end{itemize}
 \column{.48\textwidth}
 \textbf{Próximos passos}
 \begin{itemize}
   \item Juros e multa dos dividendos atrasados
   \item Dias de atraso e custo do refugo
-  \item Cotar peças alternativas
+  \item E-BUS POA: checar o Finame e responder até 25/11
+  \item Repetir o LLM com modelo maior e a multa no contexto
   \item Fase 2: double-deck e P\&D, depois do verde
 \end{itemize}
 \end{columns}

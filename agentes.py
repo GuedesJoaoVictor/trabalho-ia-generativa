@@ -9,6 +9,7 @@ import functools
 import inspect
 import json
 import os
+import re
 from dataclasses import asdict, dataclass, field
 
 import ferramentas as F
@@ -302,33 +303,45 @@ def _como_tool(fn):
                                input_schema={"type": "object", "properties": props, "required": obrig})
 
 
-MODELO_GEMINI = "gemini-flash-latest"
+MODELO_GEMINI = os.environ.get("MODELO_GEMINI", "gemini-flash-latest")
 
 
-def _parecer_gemini(plano: dict) -> dict:
+def _parecer_gemini(plano: dict, so=None) -> dict:
     """Mesmo desenho do modo Claude, com Gemini: function calling automático nas ferramentas de ferramentas.py,
-    Google Search para o Mercado e uma crítica do Revisor. Os números do plano continuam vindo do código."""
+    busca na web própria (buscar_web/ler_pagina) para o Mercado e uma crítica do Revisor. Os números do plano continuam
+    vindo do código. `so`: lista de agentes a rodar (None = todos)."""
     from google import genai
     from google.genai import types
     client = genai.Client(http_options=types.HttpOptions(retry_options=types.HttpRetryOptions(attempts=5)))
-    ger = lambda **kw: client.models.generate_content(model=MODELO_GEMINI, **kw).text or ""
+    ger = lambda **kw: client.models.generate_content(model=MODELO_GEMINI, **kw)
+    quer = lambda n: so is None or n in so
     out = {}
     for nome, tools in ESPECIALISTAS.items():
-        out[nome] = ger(contents="Analise sua área com as ferramentas e liste as 3 recomendações mais relevantes, cada uma com o número e a ferramenta de origem.",
-                        config=types.GenerateContentConfig(system_instruction=f"Você é o agente {nome}. {CONTEXTO}", tools=list(tools)))
-    out["Mercado"] = ger(contents="Pesquise fontes públicas sobre demanda por ônibus urbanos, escolares/micro e elétricos em prefeituras do RS "
-                                  "e linhas de financiamento (ex.: BNDES) e liste oportunidades com a URL de cada fonte.",
-                         config=types.GenerateContentConfig(system_instruction=f"Você é o agente de Mercado. {CONTEXTO}", tools=[types.Tool(google_search=types.GoogleSearch())]))
-    plano_json = json.dumps([asdict(p) for p in plano["propostas"]], ensure_ascii=False, default=str)
-    out["Revisor"] = ger(contents=f"Critique este plano: contradições, números sem fonte, restrições do cliente violadas.\n{plano_json}",
-                         config=types.GenerateContentConfig(system_instruction=f"Você é o Revisor. {CONTEXTO}"))
+        if quer(nome):
+            out[nome] = ger(contents="Analise sua área com as ferramentas e liste as 3 recomendações mais relevantes, cada uma com o número e a ferramenta de origem.",
+                            config=types.GenerateContentConfig(system_instruction=f"Você é o agente {nome}. {CONTEXTO}", tools=list(tools))).text or ""
+    if quer("Mercado"):
+        # a busca do Google (grounding) exige faturamento ativo; buscar_web faz o mesmo papel por raspagem e devolve URLs reais
+        r = ger(contents="Pesquise fontes públicas sobre demanda por ônibus urbanos, escolares/micro e elétricos em prefeituras do RS "
+                         "e linhas de financiamento (ex.: BNDES) com buscar_web e ler_pagina, e liste oportunidades com a URL de cada fonte.",
+                config=types.GenerateContentConfig(system_instruction=f"Você é o agente de Mercado. {CONTEXTO} Cite só URLs devolvidas pelas ferramentas.",
+                                                   tools=[F.buscar_web, F.ler_pagina]))
+        # regra de validação: toda URL citada tem de ter vindo de uma chamada de ferramenta
+        vistas = {u for c in r.automatic_function_calling_history or [] for p in c.parts or [] if p.function_response
+                  for u in re.findall(r"https?://[^\s\"'<>]+", json.dumps(p.function_response.response, ensure_ascii=False))}
+        citadas = {u.rstrip(".,;:") for u in re.findall(r"https?://[^\s)\]>*\"']+", r.text or "")}
+        out["Mercado"] = (r.text or "") + (f"\n\nURLs citadas que não vieram das ferramentas: {sorted(citadas - vistas)}" if citadas - vistas else "")
+    if quer("Revisor"):
+        plano_json = json.dumps([asdict(p) for p in plano["propostas"]], ensure_ascii=False, default=str)
+        out["Revisor"] = ger(contents=f"Critique este plano: contradições, números sem fonte, restrições do cliente violadas.\n{plano_json}",
+                             config=types.GenerateContentConfig(system_instruction=f"Você é o Revisor. {CONTEXTO}")).text or ""
     return out
 
 
 MODELO_LOCAL = os.environ.get("MODELO_LOCAL", "qwen3:4b")
 
 
-def _parecer_local(plano: dict) -> dict:
+def _parecer_local(plano: dict, so=None) -> dict:
     """Mesmo desenho, com modelo local via Ollama (sem chave, sem internet): especialistas chamam as ferramentas,
     o Revisor critica o plano. Sem busca na web: o agente de Mercado fica de fora (não inventa fonte)."""
     import ollama
@@ -350,40 +363,48 @@ def _parecer_local(plano: dict) -> dict:
                 msgs.append({"role": "tool", "tool_name": tc.function.name, "content": res[:6000]})  # cabe no contexto de 8k
         return ""
 
+    quer = lambda n: so is None or n in so
     out = {}
     for nome, tools in ESPECIALISTAS.items():
-        out[nome] = ger(f"Você é o agente {nome}. {CONTEXTO}",
-                        "Analise sua área com as ferramentas e liste as 3 recomendações mais relevantes, cada uma com o número e a ferramenta de origem.", tools)
-    resumo = json.dumps([{k: getattr(p, k) for k in ("id", "titulo", "impacto_mensal", "impacto_unico", "custo_unico", "status", "motivos", "hipoteses")}
-                         for p in plano["propostas"]], ensure_ascii=False, default=str)
-    out["Revisor"] = ger(f"Você é o Revisor. {CONTEXTO}", f"Critique este plano: contradições, números sem fonte, restrições do cliente violadas.\n{resumo}")
+        if quer(nome):
+            out[nome] = ger(f"Você é o agente {nome}. {CONTEXTO}",
+                            "Analise sua área com as ferramentas e liste as 3 recomendações mais relevantes, cada uma com o número e a ferramenta de origem.", tools)
+    if quer("Revisor"):
+        resumo = json.dumps([{k: getattr(p, k) for k in ("id", "titulo", "impacto_mensal", "impacto_unico", "custo_unico", "status", "motivos", "hipoteses")}
+                             for p in plano["propostas"]], ensure_ascii=False, default=str)
+        out["Revisor"] = ger(f"Você é o Revisor. {CONTEXTO}", f"Critique este plano: contradições, números sem fonte, restrições do cliente violadas.\n{resumo}")
     return out
 
 
-def parecer_llm(plano: dict, local: bool = False) -> dict:
+def parecer_llm(plano: dict, local: bool = False, so=None) -> dict:
     """Cada especialista (Claude) chama suas ferramentas e escreve um parecer; o Revisor (Claude) critica o plano;
-    o Mercado pesquisa na web (servidor de busca da API). Devolve textos; os números do plano continuam vindo do código."""
+    o Mercado pesquisa na web (servidor de busca da API). Devolve textos; os números do plano continuam vindo do código.
+    `so`: lista de agentes a rodar (None = todos)."""
     if local:
-        return _parecer_local(plano)
+        return _parecer_local(plano, so)
     if os.environ.get("GEMINI_API_KEY"):
-        return _parecer_gemini(plano)
+        return _parecer_gemini(plano, so)
     import anthropic
     client = anthropic.Anthropic()
+    quer = lambda n: so is None or n in so
     out = {}
     for nome, tools in ESPECIALISTAS.items():
-        runner = client.beta.messages.tool_runner(
-            model=MODELO, max_tokens=16000, tools=[_como_tool(t) for t in tools], system=f"Você é o agente {nome}. {CONTEXTO}",
-            messages=[{"role": "user", "content": "Analise sua área com as ferramentas e liste as 3 recomendações mais relevantes, cada uma com o número e a ferramenta de origem."}])
-        out[nome] = "".join(b.text for b in runner.until_done().content if b.type == "text")
-    r = client.messages.create(
-        model=MODELO, max_tokens=16000, tools=[{"type": "web_search_20260209", "name": "web_search"}],
-        system=f"Você é o agente de Mercado. {CONTEXTO}",
-        messages=[{"role": "user", "content": "Pesquise fontes públicas sobre demanda por ônibus urbanos, escolares/micro e elétricos em prefeituras do RS "
-                                              "e linhas de financiamento (ex.: BNDES) e liste oportunidades com a URL de cada fonte."}])
-    out["Mercado"] = "".join(b.text for b in r.content if b.type == "text")
-    plano_json = json.dumps([asdict(p) for p in plano["propostas"]], ensure_ascii=False, default=str)
-    r = client.messages.create(
-        model=MODELO, max_tokens=16000, system=f"Você é o Revisor. {CONTEXTO}",
-        messages=[{"role": "user", "content": f"Critique este plano: contradições, números sem fonte, restrições do cliente violadas.\n{plano_json}"}])
-    out["Revisor"] = "".join(b.text for b in r.content if b.type == "text")
+        if quer(nome):
+            runner = client.beta.messages.tool_runner(
+                model=MODELO, max_tokens=16000, tools=[_como_tool(t) for t in tools], system=f"Você é o agente {nome}. {CONTEXTO}",
+                messages=[{"role": "user", "content": "Analise sua área com as ferramentas e liste as 3 recomendações mais relevantes, cada uma com o número e a ferramenta de origem."}])
+            out[nome] = "".join(b.text for b in runner.until_done().content if b.type == "text")
+    if quer("Mercado"):
+        r = client.messages.create(
+            model=MODELO, max_tokens=16000, tools=[{"type": "web_search_20260209", "name": "web_search"}],
+            system=f"Você é o agente de Mercado. {CONTEXTO}",
+            messages=[{"role": "user", "content": "Pesquise fontes públicas sobre demanda por ônibus urbanos, escolares/micro e elétricos em prefeituras do RS "
+                                                  "e linhas de financiamento (ex.: BNDES) e liste oportunidades com a URL de cada fonte."}])
+        out["Mercado"] = "".join(b.text for b in r.content if b.type == "text")
+    if quer("Revisor"):
+        plano_json = json.dumps([asdict(p) for p in plano["propostas"]], ensure_ascii=False, default=str)
+        r = client.messages.create(
+            model=MODELO, max_tokens=16000, system=f"Você é o Revisor. {CONTEXTO}",
+            messages=[{"role": "user", "content": f"Critique este plano: contradições, números sem fonte, restrições do cliente violadas.\n{plano_json}"}])
+        out["Revisor"] = "".join(b.text for b in r.content if b.type == "text")
     return out

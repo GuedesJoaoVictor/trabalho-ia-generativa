@@ -17,7 +17,7 @@ Run `python3 -I analise_planilha.py > resultados-analise.md` to regenerate the c
 
 Run with the venv (`.venv/bin/python`, has matplotlib + anthropic; not `-I`, which hides local modules):
 
-- `.venv/bin/python executar.py` — runs the agents, writes `plano-consolidado.md`, `plano.json`, `figuras/*.png`. `--llm` adds Claude agents (needs `ANTHROPIC_API_KEY`; never executed yet).
+- `.venv/bin/python executar.py` — runs the agents, writes `plano-consolidado.md`, `plano.json`, `figuras/*.png`. `--llm` adds LLM opinions (Gemini if `GEMINI_API_KEY` is set, model from `MODELO_GEMINI`; otherwise Claude). Ran on 2026-11-05 with `gemini-3.1-flash-lite`. Free Gemini keys have no Google Search quota (429), so Mercado uses its own `buscar_web`/`ler_pagina` tools (curl, since python.org Python lacks the system certs) and the run flags any cited URL no tool returned. `--agente=Nome` reruns only that agent and keeps the others' opinions; `USAR_CACHE_BCB=1` reuses `dados_externos.json` (otherwise the BCB API is re-fetched and the report's numbers can drift).
 - `.venv/bin/python test_sistema.py` — the single check (key numbers + Revisor rules).
 - `dados.py` loads the xlsx → `ferramentas.py` (tools, all numbers, `PREMISSAS` = flagged assumptions) → `agentes.py` (specialist agents → `Proposta` objects → `revisor` recomputes from raw data and applies client rules → `consolidar`) → `executar.py`/`figuras.py`. `analise_planilha.py` is the older standalone analysis with its own loader.
 - Client rules enforced by the Revisor: 12-month horizon, CLT severance, 30-day supplier notice, Yazaki harness and CATL inverter not replaceable, production cuts must beat lost profit, caixa zero.
