@@ -15,14 +15,14 @@
 \local{Santa Maria}
 \data{2026}
 \instituicao{Universidade Federal de Santa Maria}
-\preambulo{Trabalho final apresentado à disciplina de Inteligência Artificial Generativa, como requisito parcial para obtenção do grau de bacharel. Professor(a): avaliador da disciplina.}
+\preambulo{Trabalho final apresentado à disciplina de Inteligência Artificial Generativa. Professor: Ronier Pauletto Gutierrez.}
 
 \begin{document}
 \imprimircapa
 \imprimirfolhaderosto*
 
 \begin{resumo}
-Este trabalho apresenta o diagnóstico e um plano de reestruturação para a Caxias Heavy Industries, fabricante de carrocerias de ônibus em crise financeira, operacional e de qualidade. A partir da análise de sete abas de dados estruturados fornecidas pela empresa e de entrevistas realizadas pelo Consultor com o cliente, foi identificado que a empresa possui carteira relevante de pedidos, mas opera com cobertura insuficiente sobre o passivo de dividendos e com entregas atrasadas que geram multa e adiam receita, pois prefeituras somente pagam na entrega. Foi desenvolvido um sistema multiagentes composto por Orquestrador, Financeiro, Operações, Suprimentos, Mercado/Coleta Externa e Revisor, no qual todas as contas são recalculadas por funções em Python, com dados externos do Banco Central via API SGS, e validação independente pelo Revisor com base nas regras do cliente. O plano consolidado, em horizonte de 12 meses, propõe 11 ações, das quais 8 aprovadas, 2 condicionais e 1 reprovada pelo Revisor, elevando a cobertura dos dividendos de 1,16 para 1,19 vezes e mantendo saldo mínimo positivo no proxy de caixa operacional. O estudo discute ainda limitações relevantes das hipóteses adotadas e recomendações para implementação.
+Este trabalho apresenta o diagnóstico e um plano de reestruturação para a Caxias Heavy Industries, fabricante de carrocerias de ônibus em crise financeira, operacional e de qualidade. A partir da análise de sete abas de dados estruturados fornecidas pela empresa e de entrevistas realizadas pelo Consultor com o cliente, verificou-se que a empresa tem uma boa carteira de pedidos, mas cobre mal o passivo de dividendos e atrasa entregas, o que gera multa e adia a receita, já que as prefeituras só pagam na entrega. Foi desenvolvido um sistema multiagentes composto por Orquestrador, Financeiro, Operações, Suprimentos, Mercado/Coleta Externa e Revisor, no qual todas as contas são recalculadas por funções em Python, com dados externos do Banco Central via API SGS, e validação independente pelo Revisor com base nas regras do cliente. O plano consolidado, em horizonte de 12 meses, propõe 11 ações, das quais 8 aprovadas, 2 condicionais e 1 reprovada pelo Revisor, elevando a cobertura dos dividendos de 1,16 para 1,19 vezes e mantendo saldo mínimo positivo no proxy de caixa operacional. O trabalho também discute as limitações das hipóteses adotadas e traz recomendações para a implementação.
 
 \begin{palavras-chave}
 Sistemas multiagentes. Large Language Models. Tool use. Reestruturação empresarial. Otimização operacional.
@@ -38,7 +38,7 @@ Sistemas multiagentes. Large Language Models. Tool use. Reestruturação empresa
 \chapter{Introdução}
 \section{Empresa}
 
-A Caxias Heavy Industries é uma fabricante de ônibus com capital aberto na B3. Possui cinco modelos em seu portfólio: Urbano, Articulado, Rodoviário Premium DD, Micro-ônibus e Elétrico. A empresa tem como principal mercado Santa Maria, sendo seus clientes prefeituras, empresas de turismo e secretarias municipais. Opera 24 horas por dia, em três turnos de 8 horas.
+A Caxias Heavy Industries é uma fabricante de ônibus com capital aberto na B3. Tem cinco modelos no portfólio: Urbano, Articulado, Rodoviário Premium DD, Micro-ônibus e Elétrico. A empresa tem como principal mercado Santa Maria, sendo seus clientes prefeituras, empresas de turismo e secretarias municipais. Opera 24 horas por dia, em três turnos de 8 horas.
 
 \section{Dificuldades}
 
@@ -46,17 +46,17 @@ A empresa está sofrendo com a crise na América do Sul, a queda das vendas e os
 
 A empresa tem o compromisso de pagamento de dividendos de R\$ 33,3 milhões no período de novembro de 2025 a outubro de 2026, dos quais R\$ 22,5 milhões são exigíveis, ou seja, encontram-se em atraso ou estão sendo cobrados judicialmente, enquanto os R\$ 10,8 milhões restantes estão suspensos em razão da reestruturação. Esse cenário representa um risco real de bloqueio das contas da organização pela B3.
 
-Além das dificuldades financeiras, as operações apresentam diversos problemas, como retrabalho em aproximadamente 29\% dos ônibus, falhas frequentes nas máquinas que precisam ser solucionadas pelos próprios operadores, excesso de operadores e 27 pedidos pendentes.
+A operação também tem problemas: retrabalho em aproximadamente 29\% dos ônibus, falhas frequentes nas máquinas, que os próprios operadores precisam resolver, excesso de operadores e 27 pedidos pendentes.
 
 \section{Justificativa da intervenção}
 
-A necessidade de intervenção se dá pela urgência da situação, que, caso não seja resolvida, pode levar ao bloqueio de contas da empresa, ao acúmulo de multas e à perda da capacidade de entrega. Existe uma saída viável para a empresa, considerando que, ao regularizar os pagamentos de dividendos mensais dentro de 12 meses, a empresa poderá pagar os dividendos atrasados em 24 meses.
+A situação é urgente. Sem intervenção, a empresa pode ter as contas bloqueadas, acumular multas e perder a capacidade de entrega. Há saída: se regularizar os dividendos mensais em até 12 meses, pode pagar os atrasados em 24.
 
-Como a empresa tem problemas que envolvem várias áreas, foi adotada para a solução a arquitetura de multiagentes, com agentes especializados em cada campo.
+Como os problemas atravessam várias áreas, a solução adotada foi uma arquitetura multiagentes, com um agente especializado em cada área.
 
 \section{Objetivo do trabalho}
 
-Diante desse cenário, o objetivo deste trabalho é aplicar conceitos avançados de Arquitetura de Agentes Autônomos e LLMs, utilizando dados estruturados e informações externas, para reverter o déficit operacional, otimizar custos e maximizar os resultados do cenário. A diversidade de domínios a avaliar, a necessidade de validação financeira das propostas e a existência de restrições checáveis automaticamente reforçam a adequação da arquitetura multiagentes adotada.
+Diante desse cenário, o objetivo deste trabalho é aplicar arquitetura de agentes autônomos e LLMs, com dados estruturados e informações externas, para reverter o déficit operacional, cortar custos e melhorar os resultados da empresa. A arquitetura multiagentes combina bem com o caso: são vários domínios, as propostas precisam de validação financeira e várias restrições do cliente podem ser checadas automaticamente.
 
 \section{Organização da equipe}
 
@@ -117,7 +117,7 @@ A Fase I foi conduzida exclusivamente pelo Consultor, único canal com o cliente
 \item Qualidade: taxa de refugo/retrabalho é percentual sobre o tempo de ciclo. Custo direto já inclui mão de obra, folha salarial e impostos.
 \item Fornecedores: lead time é o tempo médio real de entrega. Chicotes da Yazaki não podem ser trocados. Inversores de potência são importados da China, sem produtor nacional, e é difícil estocar pelo valor elevado e pela situação financeira. Troca de fornecedor exige aviso de 30 dias. Não há dados de paradas de máquina nem de dias de atraso por pedido.
 \item Multa: pedidos pendentes geram multa contratual de 10\% do valor do ônibus, mais 0,1\% do valor total por dia de atraso. Prefeituras só pagam na entrega. Causa dos pendentes: fornecedor atrasando e gargalo na produção.
-\item Mercado: clientes atuais de Santa Maria. Estratégia de expansão por frotas sequenciais a prefeituras. Dobro-deck e pesquisa e desenvolvimento ficam para depois, primeiro deixar a empresa no verde.
+\item Mercado: clientes atuais de Santa Maria. Estratégia de expansão por frotas sequenciais a prefeituras. Double-deck e pesquisa e desenvolvimento ficam para depois: primeiro é preciso deixar a empresa no verde.
 \item Elétrico: manter produção; redução admitida apenas se necessária para estabilizar a empresa, mas depois voltar a focar.
 \item Fontes externas: uso autorizado.
 \end{itemize}
@@ -156,7 +156,7 @@ Revisor & Valida números, restrições e coerência; devolve com motivo se repr
 
 As ferramentas são funções Python puras sobre a planilha e, no caso do Coleta Externa, sobre a API do Banco Central. Toda conta é feita por função, nunca pelo LLM. O modo determinístico, que gerou todos os resultados deste relatório, usa agentes como funções Python que chamam as ferramentas e devolvem propostas com número. O modo LLM está implementado, com especialistas Claude/Gemini/local via tool use e pesquisa web para o Mercado, mas não foi executado no desenvolvimento por ausência de chave de API; portanto nenhum número do plano depende de saída de LLM.
 
-Dados externos consultados em 03/11/2026 via API SGS do Banco Central \cite{bcb2026sgs}: Selic meta 13,75\% a.a.; dólar R\$ 5,4935; euro R\$ 6,15; IPCA do mês 0,82\%. A correção Selic dos dividendos atrasados somou R\$ 1.294.643 sobre principal de R\$ 22,5 milhões, com séries 4390 (Selic acumulada), 432 (Selic meta), 1 e 21619 (câmbio) e 433 (IPCA), com cópia em \texttt{dados\_externos.json}. Ressalta-se que a Selic foi adotada como índice de referência, pois juros e multa reais não foram informados pelo cliente.
+Dados externos consultados em 03/11/2026 via API SGS do Banco Central \cite{bcb2026sgs}: Selic meta 13,75\% a.a.; dólar R\$ 5,4935; euro R\$ 6,15; IPCA do mês 0,82\%. A correção Selic dos dividendos atrasados somou R\$ 1.294.643 sobre principal de R\$ 22,5 milhões, com séries 4390 (Selic acumulada), 432 (Selic meta), 1 e 21619 (câmbio) e 433 (IPCA), com cópia em \texttt{dados\_externos.json}. A Selic entrou como índice de referência porque o cliente não informou os juros e a multa reais.
 
 As regras de validação aplicadas pelo Revisor são:
 
@@ -202,11 +202,11 @@ A margem por modelo, pelo preço praticado, varia de 25,5\% (elétrico) a 32,3\%
 \fonte{\texttt{margem\_por\_modelo}.}
 \end{table}
 
-A BOM cobre apenas 3 dos 5 modelos e representa de 24,3\% a 37,2\% do custo direto, com 69,9\% de peças importadas no custo de BOM. A ausência de chassi na BOM e de dois modelos nela evidencia lacuna de dados.
+A BOM cobre apenas 3 dos 5 modelos e representa de 24,3\% a 37,2\% do custo direto, com 69,9\% de peças importadas no custo de BOM. Faltam o chassi e dois modelos na BOM, uma lacuna nos dados.
 
 \subsection{Capacidade, gargalos e refugo}
 
-O tempo total de ciclo é 41,1 horas por veículo. A etapa mais lenta é Pintura e Tratamento Anticorrosivo (8,0 h). Com tempo de ciclo efetivo considerando refugo, a capacidade teórica é de 89 ônibus/mês em 3 turnos e 59 em 2 turnos, contra demanda média de 26,7 e pico de 46. Portanto, no papel, a linha dá conta, e mesmo em 2 turnos comporta o pico. Os atrasos reais indicam que o gargalo efetivo está fora do tempo de ciclo, em fornecedores e paradas de máquinas de segunda mão, não medidos na planilha.
+O tempo total de ciclo é 41,1 horas por veículo. A etapa mais lenta é Pintura e Tratamento Anticorrosivo (8,0 h). Com tempo de ciclo efetivo considerando refugo, a capacidade teórica é de 89 ônibus/mês em 3 turnos e 59 em 2 turnos, contra demanda média de 26,7 e pico de 46. No papel, portanto, a linha dá conta, e mesmo em 2 turnos comporta o pico. Como os atrasos acontecem de qualquer forma, o gargalo real deve estar fora do tempo de ciclo: nos fornecedores e nas paradas das máquinas de segunda mão, que a planilha não mede.
 
 \begin{figure}[htb]
 \caption{Capacidade teórica por estação em 2 e 3 turnos}
@@ -261,7 +261,7 @@ Em 12 meses, os dividendos somam R\$ 33,3 milhões: R\$ 18,75 milhões acumulado
 
 \subsection{Inadimplência}
 
-O cliente informou que inadimplência não é problema, e a planilha não contém contas a receber. Portanto, diferentemente do enunciado que cita inadimplência como ponto crítico genérico, neste cenário não há evidencia de inadimplência; os atrasos relevantes são de dividendos e de entregas, que adiam receita de prefeituras que só pagam na entrega.
+O cliente informou que inadimplência não é problema, e a planilha não contém contas a receber. O enunciado cita inadimplência como ponto crítico, mas neste cenário não há evidência dela. Os atrasos que pesam são os de dividendos e de entregas, e estes últimos adiam a receita das prefeituras, que só pagam na entrega.
 
 \section{Soluções propostas e impacto esperado}
 
@@ -301,7 +301,7 @@ A proposta reprovada foi:
 \item \textbf{FIN-3 Reduzir o elétrico em 50\% por 12 meses:} o Revisor reprovou porque o lucro perdido de R\$ 12.156.697 supera em muito o capital liberado de R\$ 1.960.000 no inversor, e o elétrico tem o maior lucro por ônibus.
 \end{itemize}
 
-O resultado consolidado, em proxy de caixa operacional definido como lucro bruto das entregas menos dividendos, é apresentado na Tabela~\ref{tab:projecao} e Figura~\ref{fig:caixa}. O lucro bruto base é R\$ 4.363.131/mês. A cobertura sobe de 1,16x sem plano para 1,19x com plano. O saldo mínimo é R\$ 1.017.779 no mês 1, após ganho de R\$ 421.092 com SUP-1. No mês 2, somam-se R\$ 7.072.776 de FIN-2. As melhorias recorrentes somam R\$ 137.181/mês a partir do mês 4. O saldo acumulado em 12 meses é R\$ 15.852.553. É importante enfatizar que esse saldo não é caixa real: é proxy, sem despesas fora do custo direto nem outras dívidas, e o cliente informou caixa zero inicial.
+O resultado consolidado, em proxy de caixa operacional definido como lucro bruto das entregas menos dividendos, é apresentado na Tabela~\ref{tab:projecao} e Figura~\ref{fig:caixa}. O lucro bruto base é R\$ 4.363.131/mês. A cobertura sobe de 1,16x sem plano para 1,19x com plano. O saldo mínimo é R\$ 1.017.779 no mês 1, após ganho de R\$ 421.092 com SUP-1. No mês 2, somam-se R\$ 7.072.776 de FIN-2. As melhorias recorrentes somam R\$ 137.181/mês a partir do mês 4. O saldo acumulado em 12 meses é R\$ 15.852.553. Esse saldo não é caixa real: é um proxy, sem despesas fora do custo direto nem outras dívidas, e o cliente informou caixa inicial zero.
 
 \begin{table}[htb]
 \caption{Projeção de 12 meses do proxy de caixa operacional}
@@ -318,12 +318,12 @@ O resultado consolidado, em proxy de caixa operacional definido como lucro bruto
 \fonte{Projeção em \texttt{plano-consolidado.md}.}
 \end{figure}
 
-Qualitativamente, o plano restabelece disciplina de compras vinculada à carteira firme, reduz exposição a atrasos por lead time, ataca o refugo nos pontos críticos sem depender dele para o caixa, formaliza acordo de dividendos compatível com a ordem do cliente e preserva o elétrico, apesar de menor margem percentual, pelo maior lucro absoluto por unidade.
+Do ponto de vista qualitativo, o plano amarra as compras à carteira firme, o que reduz os atrasos por lead time. Ataca o refugo nas etapas críticas sem contar com ele para o caixa e formaliza um acordo de dividendos dentro da ordem do cliente. E mantém o elétrico: a margem percentual é a menor, mas o lucro por unidade é o maior.
 
 \chapter{Conclusão}
 \section{Síntese dos resultados}
 
-O sistema multiagentes demonstrou ser adequado ao problema, pois decompôs domínios independentes, aplicou validação independente e rejeitou uma alternativa que parecia aliviar caixa mas destruía valor. O diagnóstico mostra que a empresa não tem problema de demanda, mas de conversão de demanda em caixa: pedidos faturáveis só geram receita ao entregar, e entregas atrasadas geram multa. O plano eleva a cobertura de dividendos e mantém saldo proxy positivo desde o primeiro mês, ao priorizar pendentes e compras no pedido firme.
+O sistema multiagentes se mostrou adequado ao problema: separou domínios independentes, validou as propostas por fora e rejeitou uma alternativa que parecia aliviar o caixa, mas destruía valor. O diagnóstico é que a empresa não tem problema de demanda e sim de conversão da demanda em caixa, já que o pedido só vira receita na entrega e a entrega atrasada gera multa. O plano eleva a cobertura dos dividendos e mantém o saldo proxy positivo desde o primeiro mês, ao priorizar os pendentes e comprar só contra pedido firme.
 
 \section{Limitações do projeto}
 
